@@ -1,20 +1,16 @@
 #include "FoodItemTypesDAO.h"
-#include <algorithm>  // For std::find_if
-#include <stdexcept>  // For std::runtime_error
+#include <algorithm>
+#include <stdexcept>
 
 namespace DAO {
 
 std::vector<DTO::FoodItemTypes> FoodItemTypesDAO::foodItemTypes;
 
-// Function to load food item types from database
 std::vector<DTO::FoodItemTypes> FoodItemTypesDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return foodItemTypes;
 }
 
-// Function to save food item types to database
 void FoodItemTypesDAO::saveToDatabase(const std::vector<DTO::FoodItemTypes>& foodItemTypes) {
-    // Replace with actual database saving logic
     FoodItemTypesDAO::foodItemTypes = foodItemTypes;
 }
 
@@ -53,4 +49,4 @@ bool FoodItemTypesDAO::updateFoodItemType(const DTO::FoodItemTypes& foodItemType
     return false;
 }
 
-} // namespace DAO
+}

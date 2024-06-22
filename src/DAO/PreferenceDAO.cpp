@@ -6,15 +6,11 @@ namespace DAO {
 
 std::vector<DTO::Preference> PreferenceDAO::preferences;
 
-// Function to load preferences from database
 std::vector<DTO::Preference> PreferenceDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return preferences;
 }
 
-// Function to save preferences to database
 void PreferenceDAO::saveToDatabase(const std::vector<DTO::Preference>& preferences) {
-    // Replace with actual database saving logic
     PreferenceDAO::preferences = preferences;
 }
 
@@ -53,4 +49,4 @@ bool PreferenceDAO::updatePreference(const DTO::Preference& preference) {
     return false;
 }
 
-} // namespace DAO
+}

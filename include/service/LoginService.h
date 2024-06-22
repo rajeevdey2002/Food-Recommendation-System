@@ -14,4 +14,4 @@ public:
     static std::vector<DTO::Login> getUserLoginHistory(uint64_t userId);
 };
 
-} // namespace Service
+}

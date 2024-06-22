@@ -36,4 +36,4 @@ struct Login {
     }
 };
 
-} // namespace DTO
+}

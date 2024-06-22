@@ -24,4 +24,4 @@ private:
     static std::vector<DTO::Feedback> loadFromDatabase();
 };
 
-} // namespace DAO
+}

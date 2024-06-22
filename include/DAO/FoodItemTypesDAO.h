@@ -17,4 +17,4 @@ private:
     static std::vector<DTO::FoodItemTypes> foodItemTypes;
 };
 
-} // namespace DAO
+}

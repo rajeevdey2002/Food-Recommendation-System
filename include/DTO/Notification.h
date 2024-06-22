@@ -36,4 +36,4 @@ struct Notification {
     }
 };
 
-}; // namespace DTO
+};

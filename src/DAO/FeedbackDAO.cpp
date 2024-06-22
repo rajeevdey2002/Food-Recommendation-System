@@ -46,17 +46,15 @@ bool FeedbackDAO::updateFeedback(const DTO::Feedback& feedback) {
 bool FeedbackDAO::deleteFeedback(uint64_t feedbackId) {
     std::vector<DTO::Feedback> feedbacks = loadFromDatabase();
     
-    // Loop through the vector and find the feedback with the given id
     auto it = feedbacks.begin();
     while (it != feedbacks.end()) {
         if (it->feedbackId == feedbackId) {
-            it = feedbacks.erase(it);  // Erase the element and get the next iterator
+            it = feedbacks.erase(it);
         } else {
-            ++it;  // Move to the next element
+            ++it;
         }
     }
 
-    // Save the modified vector back to the database
     saveToDatabase(feedbacks);
     return true;
 }
@@ -110,4 +108,4 @@ std::vector<DTO::Feedback> FeedbackDAO::loadFromDatabase() {
     return feedbacks;
 }
 
-} // namespace DAO
+}

@@ -17,4 +17,4 @@ private:
     static std::vector<DTO::Notification> notifications;
 };
 
-} // namespace DAO
+}

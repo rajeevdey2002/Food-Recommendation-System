@@ -6,15 +6,11 @@ namespace DAO {
 
 std::vector<DTO::ScheduledMenu> ScheduledMenuDAO::scheduledMenus;
 
-// Function to load scheduled menus from database
 std::vector<DTO::ScheduledMenu> ScheduledMenuDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return scheduledMenus;
 }
 
-// Function to save scheduled menus to database
 void ScheduledMenuDAO::saveToDatabase(const std::vector<DTO::ScheduledMenu>& scheduledMenus) {
-    // Replace with actual database saving logic
     ScheduledMenuDAO::scheduledMenus = scheduledMenus;
 }
 
@@ -53,4 +49,4 @@ bool ScheduledMenuDAO::updateScheduledMenu(const DTO::ScheduledMenu& scheduledMe
     return false;
 }
 
-} // namespace DAO
+}

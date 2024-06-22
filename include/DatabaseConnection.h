@@ -26,4 +26,4 @@ private:
     const char* database;
 };
 
-#endif // DATABASE_CONNECTION_H
+#endif

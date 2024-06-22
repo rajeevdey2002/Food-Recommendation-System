@@ -27,4 +27,4 @@ struct MenuType {
     }
 };
 
-}; // namespace DTO
+};

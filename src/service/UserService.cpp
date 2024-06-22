@@ -25,4 +25,4 @@ bool UserService::authenticateUser(int userId, const std::string& password) {
     return false;
 }
 
-} // namespace Service
+}

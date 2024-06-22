@@ -23,7 +23,6 @@ struct Feedback {
       : feedbackId(feedbackId), userId(userId), menuId(menuId),
         foodItemId(foodItemId), rating(rating), comment(comment), date(date) {}
 
-  // Serialize Feedback to JSON
   std::string toJson() const {
     rapidjson::Document doc;
     doc.SetObject();
@@ -44,7 +43,6 @@ struct Feedback {
     return buffer.GetString();
   }
 
-  // Deserialize JSON to Feedback
   static Feedback fromJson(const std::string& jsonStr) {
     rapidjson::Document doc;
     doc.Parse(jsonStr.c_str());
@@ -61,4 +59,4 @@ struct Feedback {
   }
 };
 
-} // namespace DTO
+}

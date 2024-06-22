@@ -30,4 +30,4 @@ struct MenuItem {
     }
 };
 
-}; // namespace DTO
+};

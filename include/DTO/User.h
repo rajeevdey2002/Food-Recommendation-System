@@ -18,7 +18,6 @@ struct User {
   User(uint64_t userId, std::string name, std::string password, uint64_t roleId, uint64_t lastNotificationId)
       : userId(userId), name(name), password(password), roleId(roleId), lastNotificationId(lastNotificationId) {}
 
-  // Serialize User to JSON
   std::string toJson() const {
     rapidjson::Document doc;
     doc.SetObject();
@@ -37,7 +36,6 @@ struct User {
     return buffer.GetString();
   }
 
-  // Deserialize JSON to User
   static User fromJson(const std::string& jsonStr) {
     rapidjson::Document doc;
     doc.Parse(jsonStr.c_str());
@@ -52,4 +50,4 @@ struct User {
   }
 };
 
-} // namespace DTO
+}

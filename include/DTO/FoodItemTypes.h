@@ -27,4 +27,4 @@ struct FoodItemTypes {
     }
 };
 
-}; // namespace DTO
+};

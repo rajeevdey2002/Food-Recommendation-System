@@ -17,7 +17,7 @@ bool LoginDAO::addLogin(const DTO::Login& login) {
         pstmt->setUInt64(1, login.userId);
         pstmt->setUInt64(2, login.roleId);
         pstmt->setString(3, login.loginTime);
-        pstmt->setNull(4, sql::DataType::TIMESTAMP); // Setting logoutTime to NULL
+        pstmt->setNull(4, sql::DataType::TIMESTAMP);
         pstmt->executeUpdate();
         return true;
     } catch (sql::SQLException &e) {
@@ -31,7 +31,7 @@ bool LoginDAO::updateLogoutTime(uint64_t loginId, const std::string& logoutTime)
         auto db = DatabaseConnection::getInstance();
         auto conn = db->getConnection();
         std::unique_ptr<sql::PreparedStatement> pstmt(conn->prepareStatement(
-            "UPDATE Login SET logoutTime = ? WHERE loginId = ?" // Change 'id' to 'loginId'
+            "UPDATE Login SET logoutTime = ? WHERE loginId = ?"
         ));
         pstmt->setString(1, logoutTime);
         pstmt->setUInt64(2, loginId);
@@ -79,11 +79,11 @@ void LoginDAO::logLoginAttempt(uint64_t userId, uint64_t roleId, const std::stri
         pstmt->setUInt64(1, userId);
         pstmt->setUInt64(2, roleId);
         pstmt->setString(3, loginTime);
-        pstmt->setNull(4, sql::DataType::TIMESTAMP); // Setting logoutTime to NULL
+        pstmt->setNull(4, sql::DataType::TIMESTAMP);
         pstmt->executeUpdate();
     } catch (sql::SQLException &e) {
         std::cerr << "Error logging login attempt: " << e.what() << std::endl;
     }
 }
 
-} // namespace DAO
+}

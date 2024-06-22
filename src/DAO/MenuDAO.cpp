@@ -6,15 +6,11 @@ namespace DAO {
 
 std::vector<DTO::Menu> MenuDAO::menus;
 
-// Function to load menus from database
 std::vector<DTO::Menu> MenuDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return menus;
 }
 
-// Function to save menus to database
 void MenuDAO::saveToDatabase(const std::vector<DTO::Menu>& menus) {
-    // Replace with actual database saving logic
     MenuDAO::menus = menus;
 }
 
@@ -53,4 +49,4 @@ bool MenuDAO::updateMenu(const DTO::Menu& menu) {
     return false;
 }
 
-} // namespace DAO
+}

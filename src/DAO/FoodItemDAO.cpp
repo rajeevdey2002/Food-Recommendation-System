@@ -45,17 +45,15 @@ bool FoodItemDAO::updateFoodItem(const DTO::FoodItem& foodItem) {
 bool FoodItemDAO::deleteFoodItem(uint64_t foodItemId) {
     std::vector<DTO::FoodItem> foodItems = loadFromDatabase();
     
-    // Loop through the vector and find the food item with the given id
     auto it = foodItems.begin();
     while (it != foodItems.end()) {
         if (it->foodItemId == foodItemId) {
-            it = foodItems.erase(it);  // Erase the element and get the next iterator
+            it = foodItems.erase(it);
         } else {
-            ++it;  // Move to the next element
+            ++it;
         }
     }
 
-    // Save the modified vector back to the database
     saveToDatabase(foodItems);
     return true;
 }
@@ -103,4 +101,4 @@ std::vector<DTO::FoodItem> FoodItemDAO::loadFromDatabase() {
     return foodItems;
 }
 
-} // namespace DAO
+}

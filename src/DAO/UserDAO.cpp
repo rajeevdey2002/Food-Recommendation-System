@@ -45,17 +45,15 @@ bool UserDAO::updateUser(const DTO::User& user) {
 bool UserDAO::deleteUser(uint64_t userId) {
     std::vector<DTO::User> users = loadFromDatabase();
     
-    // Loop through the vector and find the user with the given id
     auto it = users.begin();
     while (it != users.end()) {
         if (it->userId == userId) {
-            it = users.erase(it);  // Erase the element and get the next iterator
+            it = users.erase(it);
         } else {
-            ++it;  // Move to the next element
+            ++it;
         }
     }
 
-    // Save the modified vector back to the database
     saveToDatabase(users);
     return true;
 }
@@ -105,4 +103,4 @@ std::vector<DTO::User> UserDAO::loadFromDatabase() {
     return users;
 }
 
-} // namespace DAO
+}

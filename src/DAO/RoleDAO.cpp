@@ -6,15 +6,11 @@ namespace DAO {
 
 std::vector<DTO::Role> RoleDAO::roles;
 
-// Function to load roles from database
 std::vector<DTO::Role> RoleDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return roles;
 }
 
-// Function to save roles to database
 void RoleDAO::saveToDatabase(const std::vector<DTO::Role>& roles) {
-    // Replace with actual database saving logic
     RoleDAO::roles = roles;
 }
 
@@ -53,4 +49,4 @@ bool RoleDAO::updateRole(const DTO::Role& role) {
     return false;
 }
 
-} // namespace DAO
+}

@@ -6,15 +6,11 @@ namespace DAO {
 
 std::vector<DTO::Notification> NotificationDAO::notifications;
 
-// Function to load notifications from database
 std::vector<DTO::Notification> NotificationDAO::loadFromDatabase() {
-    // Replace with actual database loading logic
     return notifications;
 }
 
-// Function to save notifications to database
 void NotificationDAO::saveToDatabase(const std::vector<DTO::Notification>& notifications) {
-    // Replace with actual database saving logic
     NotificationDAO::notifications = notifications;
 }
 
@@ -53,4 +49,4 @@ bool NotificationDAO::updateNotification(const DTO::Notification& notification) 
     return false;
 }
 
-} // namespace DAO
+}

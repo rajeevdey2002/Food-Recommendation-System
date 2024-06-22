@@ -17,7 +17,6 @@ struct FoodItem {
   FoodItem(uint64_t foodItemId, std::string name, std::string description, double price)
       : foodItemId(foodItemId), name(name), description(description), price(price) {}
 
-  // Serialize FoodItem to JSON
   std::string toJson() const {
     rapidjson::Document doc;
     doc.SetObject();
@@ -35,7 +34,6 @@ struct FoodItem {
     return buffer.GetString();
   }
 
-  // Deserialize JSON to FoodItem
   static FoodItem fromJson(const std::string& jsonStr) {
     rapidjson::Document doc;
     doc.Parse(jsonStr.c_str());
@@ -49,4 +47,4 @@ struct FoodItem {
   }
 };
 
-} // namespace DTO
+}

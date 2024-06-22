@@ -13,4 +13,4 @@ public:
     static void logLoginAttempt(uint64_t userId, uint64_t roleId, const std::string& loginTime);
 };
 
-} // namespace DAO
+}

@@ -109,7 +109,7 @@ void Server::startServer(int port) {
 
     std::cout << "Server listening on port " << port << std::endl;
 
-    initDatabase(); // Initialize the database
+    initDatabase();
 
     std::vector<std::thread> clientThreads;
     while (serverRunning) {

@@ -33,4 +33,4 @@ struct Preference {
     }
 };
 
-}; // namespace DTO
+};

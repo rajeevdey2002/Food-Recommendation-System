@@ -27,4 +27,4 @@ struct Role {
     }
 };
 
-}; // namespace DTO
+};
