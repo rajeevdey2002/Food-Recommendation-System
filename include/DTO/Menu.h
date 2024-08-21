@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
@@ -9,25 +8,46 @@
 namespace DTO {
 
 struct Menu {
-    uint64_t menuId;
-    std::string name;
-    std::string description;
+  uint64_t menuId;
+  std::string menuName;
+  uint64_t categoryId;
+  bool isSurvey;
+  std::string date;
 
-    Menu(uint64_t id, const std::string& name, const std::string& description)
-        : menuId(id), name(name), description(description) {}
+  Menu() = default;
+  Menu(uint64_t menuId, std::string menuName, uint64_t categoryId, bool isSurvey, std::string date)
+      : menuId(menuId), menuName(menuName), categoryId(categoryId), isSurvey(isSurvey), date(date) {}
 
-    Menu(const rapidjson::Value& json) {
-        menuId = json["menuId"].GetUint64();
-        name = json["name"].GetString();
-        description = json["description"].GetString();
-    }
+  std::string toJson() const {
+    rapidjson::Document doc;
+    doc.SetObject();
+    rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    void toJSON(rapidjson::Document& doc, rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const {
-        json.SetObject();
-        json.AddMember("menuId", menuId, allocator);
-        json.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
-        json.AddMember("description", rapidjson::Value(description.c_str(), allocator), allocator);
-    }
+    doc.AddMember("menuId", menuId.getValue(), allocator);
+    doc.AddMember("menuName", rapidjson::Value(menuName.c_str(), allocator).Move(), allocator);
+    doc.AddMember("categoryId", categoryId.getValue(), allocator);
+    doc.AddMember("isSurvey", isSurvey, allocator);
+    doc.AddMember("date", rapidjson::Value(date.c_str(), allocator).Move(), allocator);
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+
+    return buffer.GetString();
+  }
+
+  static Menu fromJson(const std::string& jsonStr) {
+    rapidjson::Document doc;
+    doc.Parse(jsonStr.c_str());
+
+    uint64_t menuId(doc["menuId"].GetUint64());
+    std::string menuName(doc["menuName"].GetString());
+    uint64_t categoryId(doc["categoryId"].GetUint64());
+    bool isSurvey = doc["isSurvey"].GetBool();
+    std::string date(doc["date"].GetString());
+
+    return Menu(menuId, menuName, categoryId, isSurvey, date);
+  }
 };
 
-};
+}; // namespace DTO

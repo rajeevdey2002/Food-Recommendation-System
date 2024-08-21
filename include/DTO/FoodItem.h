@@ -10,22 +10,33 @@ namespace DTO {
 
 struct FoodItem {
   uint64_t foodItemId;
-  std::string name;
-  std::string description;
   double price;
+  bool availabilityStatus;
+  bool isDiscarded;
+  uint64_t foodItemTypeId;
+  std::string itemName;
 
-  FoodItem(uint64_t foodItemId, std::string name, std::string description, double price)
-      : foodItemId(foodItemId), name(name), description(description), price(price) {}
+  FoodItem()
+      : foodItemId(0), price(0), availabilityStatus(false), isDiscarded(false),
+        foodItemTypeId(0), itemName("") {}
+
+  FoodItem(uint64_t foodItemId, double price, bool availabilityStatus,
+           bool isDiscarded, uint64_t foodItemTypeId, std::string itemName)
+      : foodItemId(foodItemId), price(price),
+        availabilityStatus(availabilityStatus), isDiscarded(isDiscarded),
+        foodItemTypeId(foodItemTypeId), itemName(itemName) {}
 
   std::string toJson() const {
     rapidjson::Document doc;
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("foodItemId", foodItemId, allocator);
-    doc.AddMember("name", rapidjson::Value(name.c_str(), allocator).Move(), allocator);
-    doc.AddMember("description", rapidjson::Value(description.c_str(), allocator).Move(), allocator);
-    doc.AddMember("price", price, allocator);
+    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
+    doc.AddMember("price", price.getValue(), allocator);
+    doc.AddMember("availabilityStatus", availabilityStatus, allocator);
+    doc.AddMember("isDiscarded", isDiscarded, allocator);
+    doc.AddMember("foodItemTypeId", foodItemTypeId.getValue(), allocator);
+    doc.AddMember("itemName", rapidjson::Value(itemName.c_str(), allocator).Move(), allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -38,13 +49,15 @@ struct FoodItem {
     rapidjson::Document doc;
     doc.Parse(jsonStr.c_str());
 
-    uint64_t foodItemId = doc["foodItemId"].GetUint64();
-    std::string name = doc["name"].GetString();
-    std::string description = doc["description"].GetString();
-    double price = doc["price"].GetDouble();
+    uint64_t foodItemId(doc["foodItemId"].GetUint64());
+    double price(doc["price"].GetDouble());
+    bool availabilityStatus = doc["availabilityStatus"].GetBool();
+    bool isDiscarded = doc["isDiscarded"].GetBool();
+    uint64_t foodItemTypeId(doc["foodItemTypeId"].GetUint64());
+    std::string itemName(doc["itemName"].GetString());
 
-    return FoodItem(foodItemId, name, description, price);
+    return FoodItem(foodItemId, price, availabilityStatus, isDiscarded, foodItemTypeId, itemName);
   }
 };
 
-}
+} // namespace DTO

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
@@ -9,25 +7,43 @@
 namespace DTO {
 
 struct MenuItem {
-    uint64_t menuItemId;
-    uint64_t menuId;
-    uint64_t foodItemId;
+  uint64_t menuItemId;
+  uint64_t foodItemId;
+  uint64_t menuId;
+  uint32_t quantity;
 
-    MenuItem(uint64_t id, uint64_t menuId, uint64_t foodItemId)
-        : menuItemId(id), menuId(menuId), foodItemId(foodItemId) {}
+  MenuItem() : menuItemId(0), foodItemId(0), menuId(0), quantity(0) {}
+  MenuItem(uint64_t menuItemId, uint64_t foodItemId, uint64_t menuId, uint32_t quantity)
+      : menuItemId(menuItemId), foodItemId(foodItemId), menuId(menuId), quantity(quantity) {}
 
-    MenuItem(const rapidjson::Value& json) {
-        menuItemId = json["menuItemId"].GetUint64();
-        menuId = json["menuId"].GetUint64();
-        foodItemId = json["foodItemId"].GetUint64();
-    }
+  std::string toJson() const {
+    rapidjson::Document doc;
+    doc.SetObject();
+    rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    void toJSON(rapidjson::Document& doc, rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const {
-        json.SetObject();
-        json.AddMember("menuItemId", menuItemId, allocator);
-        json.AddMember("menuId", menuId, allocator);
-        json.AddMember("foodItemId", foodItemId, allocator);
-    }
+    doc.AddMember("menuItemId", menuItemId.getValue(), allocator);
+    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
+    doc.AddMember("menuId", menuId.getValue(), allocator);
+    doc.AddMember("quantity", quantity.getValue(), allocator);
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+
+    return buffer.GetString();
+  }
+
+  static MenuItem fromJson(const std::string& jsonStr) {
+    rapidjson::Document doc;
+    doc.Parse(jsonStr.c_str());
+
+    uint64_t menuItemId(doc["menuItemId"].GetUint64());
+    uint64_t foodItemId(doc["foodItemId"].GetUint64());
+    uint64_t menuId(doc["menuId"].GetUint64());
+    uint32_t quantity(doc["quantity"].GetUint32());
+
+    return MenuItem(menuItemId, foodItemId, menuId, quantity);
+  }
 };
 
-};
+}; // namespace DTO

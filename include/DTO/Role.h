@@ -2,29 +2,34 @@
 
 #include <cstdint>
 #include <string>
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 
 namespace DTO {
 
-struct Role {
-    uint64_t roleId;
-    std::string roleName;
+enum class Role : uint64_t { Admin = 1, Employee = 2, Chef = 3 };
 
-    Role(uint64_t id, const std::string& roleName)
-        : roleId(id), roleName(roleName) {}
+inline std::string RoleToString(Role role) {
+  switch (role) {
+  case Role::Admin:
+    return "Admin";
+  case Role::Employee:
+    return "Employee";
+  case Role::Chef:
+    return "Chef";
+  default:
+    throw std::invalid_argument("Invalid role");
+  }
+}
 
-    Role(const rapidjson::Value& json) {
-        roleId = json["roleId"].GetUint64();
-        roleName = json["roleName"].GetString();
-    }
+inline Role StringToRole(const std::string &role) {
+  if (role == "Admin") {
+    return Role::Admin;
+  } else if (role == "Employee") {
+    return Role::Employee;
+  } else if (role == "Chef") {
+    return Role::Chef;
+  } else {
+    throw std::invalid_argument("Invalid role");
+  }
+}
 
-    void toJSON(rapidjson::Document& doc, rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const {
-        json.SetObject();
-        json.AddMember("roleId", roleId, allocator);
-        json.AddMember("roleName", rapidjson::Value(roleName.c_str(), allocator), allocator);
-    }
-};
-
-};
+}; // namespace DTO
