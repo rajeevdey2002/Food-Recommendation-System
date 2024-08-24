@@ -2,12 +2,12 @@
 
 #include "Feedback.h"
 #include "IFeedbackDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 
 namespace DAO {
 
 class FeedbackDAO : public IFeedbackDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   FeedbackDAO();

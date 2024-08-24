@@ -9,7 +9,7 @@
 
 using DAO::MenuItemDAO;
 
-MenuItemDAO::MenuItemDAO() : dbConnection{DbConnection::getInstance()} {}
+MenuItemDAO::MenuItemDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool MenuItemDAO::addMenuItem(uint64_t foodItemId, uint64_t menuId,
                               uint32_t quantity) {

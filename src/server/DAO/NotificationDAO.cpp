@@ -1,6 +1,6 @@
 #include "server/DAO/NotificationDAO.h"
 #include "DTO/Notification.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
@@ -10,7 +10,7 @@ using DAO::NotificationDAO;
 using DTO::Notification;
 
 NotificationDAO::NotificationDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool NotificationDAO::addNotification(Notification notification) {
   std::shared_ptr<sql::Connection> connection = dbConnection->getConnection();

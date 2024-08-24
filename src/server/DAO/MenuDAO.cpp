@@ -1,6 +1,6 @@
 #include "server/DAO/MenuDAO.h"
 #include "Category.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -9,7 +9,7 @@
 
 using DAO::MenuDAO;
 
-MenuDAO::MenuDAO() : dbConnection{DbConnection::getInstance()} {}
+MenuDAO::MenuDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 uint64_t MenuDAO::addMenu(DTO::Menu menu) {
   std::shared_ptr<sql::Connection> connection = dbConnection->getConnection();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IReviewDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <memory>
 
 namespace DAO {
@@ -10,7 +10,7 @@ using DAO::IReviewDAO;
 using DTO::Review;
 
 class ReviewDAO : public IReviewDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   ReviewDAO();

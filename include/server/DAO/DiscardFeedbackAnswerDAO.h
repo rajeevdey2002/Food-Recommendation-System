@@ -2,11 +2,11 @@
 
 #include "DTO/DiscardFeedbackAnswer.h"
 #include "IDiscardFeedbackAnswerDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 
 namespace DAO {
 class DiscardFeedbackAnswerDAO : public IDiscardFeedbackAnswerDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   DiscardFeedbackAnswerDAO();

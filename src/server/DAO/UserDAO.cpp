@@ -7,7 +7,7 @@
 using DAO::UserDAO;
 using DTO::User;
 
-UserDAO::UserDAO() { dbConnection = DbConnection::getInstance(); }
+UserDAO::UserDAO() { dbConnection = DatabaseConnection::getInstance(); }
 
 std::vector<User> UserDAO::getAllUsers() {
   std::shared_ptr<sql::Connection> connection = dbConnection->getConnection();

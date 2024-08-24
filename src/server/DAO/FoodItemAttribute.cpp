@@ -1,5 +1,5 @@
 #include "server/DAO/FoodItemAttributeDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -8,7 +8,7 @@
 using DAO::FoodItemAttributeDAO;
 
 FoodItemAttributeDAO::FoodItemAttributeDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool FoodItemAttributeDAO::addFoodItemAttribute(uint64_t foodItemId,
                                                 uint64_t attributeId) {

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "IUserFoodPreferenceDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cstdint>
 #include <vector>
 
 namespace DAO {
 
 class UserFoodPreferenceDAO : public IUserFoodPreferenceDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   UserFoodPreferenceDAO();

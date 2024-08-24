@@ -1,43 +1,43 @@
 #include "ApplicationFactory.h"
 
-#include "Client/ClientApplication.h"
-#include "Client/UserHandler.h"
+#include "client/ClientApplication.h"
+#include "client/UserHandler.h"
 #include "Config.h"
 #include "IApplication.h"
 #include "Role.h"
-#include "Server/Controller/AdminController.h"
-#include "Server/Controller/AuthController.h"
-#include "Server/Controller/ChefController.h"
-#include "Server/Controller/EmployeeController.h"
-#include "Server/DAO/DiscardFeedbackAnswerDAO.h"
-#include "Server/DAO/DiscardFeedbackQuestionDAO.h"
-#include "Server/DAO/FeedbackDAO.h"
-#include "Server/DAO/FoodItemAttributeDAO.h"
-#include "Server/DAO/FoodItemDAO.h"
-#include "Server/DAO/IFeedbackDAO.h"
-#include "Server/DAO/IMenuItemDAO.h"
-#include "Server/DAO/IReviewDAO.h"
-#include "Server/DAO/IUserDAO.h"
-#include "Server/DAO/MenuDAO.h"
-#include "Server/DAO/MenuItemDAO.h"
-#include "Server/DAO/NotificationDAO.h"
-#include "Server/DAO/ReviewDAO.h"
-#include "Server/DAO/UserActivityDAO.h"
-#include "Server/DAO/UserFoodPreferenceDAO.h"
-#include "Server/DbConnection.h"
-#include "Server/Middleware/AuthMiddleware.h"
-#include "Server/Middleware/IMiddleware.h"
-#include "Server/RequestHandler.h"
-#include "Server/RouteHandler.h"
-#include "Server/ServerApplication.h"
-#include "Server/Service/FoodItemService.h"
-#include "Server/Service/MenuService.h"
-#include "Server/Service/RecommendationService.h"
-#include "Server/Service/UserService.h"
+#include "server/controller/AdminController.h"
+#include "server/controller/AuthController.h"
+#include "server/controller/ChefController.h"
+#include "server/controller/EmployeeController.h"
+#include "server/DAO/DiscardFeedbackAnswerDAO.h"
+#include "server/DAO/DiscardFeedbackQuestionDAO.h"
+#include "server/DAO/FeedbackDAO.h"
+#include "server/DAO/FoodItemAttributeDAO.h"
+#include "server/DAO/FoodItemDAO.h"
+#include "server/DAO/IFeedbackDAO.h"
+#include "server/DAO/IMenuItemDAO.h"
+#include "server/DAO/IReviewDAO.h"
+#include "server/DAO/IUserDAO.h"
+#include "server/DAO/MenuDAO.h"
+#include "server/DAO/MenuItemDAO.h"
+#include "server/DAO/NotificationDAO.h"
+#include "server/DAO/ReviewDAO.h"
+#include "server/DAO/UserActivityDAO.h"
+#include "server/DAO/UserFoodPreferenceDAO.h"
+#include "server/DatabaseConnection.h"
+#include "server/Middleware/AuthMiddleware.h"
+#include "server/Middleware/IMiddleware.h"
+#include "server/RequestHandler.h"
+#include "server/RouteHandler.h"
+#include "server/ServerApplication.h"
+#include "server/service/FoodItemService.h"
+#include "server/service/MenuService.h"
+#include "server/service/RecommendationService.h"
+#include "server/service/UserService.h"
 #include <csignal>
 #include <memory>
 
-void initDbConnection() {
+void initDatabaseConnection() {
   std::string userName = std::getenv("MYSQL_USER");
   std::string password = std::getenv("MYSQL_PASSWORD");
   std::string host = std::getenv("MYSQL_HOST");
@@ -55,7 +55,7 @@ void initDbConnection() {
     exit(1);
   }
 
-  DbConnection::initDbConnection("tcp://" + host + ":" + port, userName,
+  DatabaseConnection::initDatabaseConnection("tcp://" + host + ":" + port, userName,
                                  password, dbName);
 }
 
@@ -64,7 +64,7 @@ IApplication *ApplicationFactory::createClientApplication() {
 }
 
 IApplication *ApplicationFactory::createServerApplication() {
-  initDbConnection();
+  initDatabaseConnection();
   // DAOs
   auto userDAO = std::make_shared<DAO::UserDAO>();
   auto userActivityDAO = std::make_shared<DAO::UserActivityDAO>();

@@ -1,13 +1,13 @@
 #pragma once
 
 #include "IFoodItemAttributeDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cstdint>
 
 namespace DAO {
 
 class FoodItemAttributeDAO : public IFoodItemAttributeDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   FoodItemAttributeDAO();

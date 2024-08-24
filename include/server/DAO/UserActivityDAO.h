@@ -1,14 +1,14 @@
 #pragma once
 
 #include "IUserActivityDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 
 namespace DAO {
 
 using DTO::UserActivity;
 
 class UserActivityDAO : public IUserActivityDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   UserActivityDAO();

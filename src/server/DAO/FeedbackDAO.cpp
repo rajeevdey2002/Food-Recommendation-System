@@ -1,5 +1,5 @@
 #include "server/DAO/FeedbackDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -7,7 +7,7 @@
 
 using DAO::FeedbackDAO;
 
-FeedbackDAO::FeedbackDAO() : dbConnection{DbConnection::getInstance()} {}
+FeedbackDAO::FeedbackDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool FeedbackDAO::addFeedback(DTO::Feedback feedback) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};

@@ -1,6 +1,6 @@
 #include "server/DAO/AttributeDAO.h"
 #include "Attribute.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -9,7 +9,7 @@
 using DAO::AttributeDAO;
 using DTO::Attribute;
 
-AttributeDAO::AttributeDAO() : dbConnection{DbConnection::getInstance()} {}
+AttributeDAO::AttributeDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 U64 AttributeDAO::addAttribute(SString attributeName) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};

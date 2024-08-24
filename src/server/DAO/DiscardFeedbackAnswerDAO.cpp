@@ -1,5 +1,5 @@
 #include "server/DAO/DiscardFeedbackAnswerDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -8,7 +8,7 @@
 using DAO::DiscardFeedbackAnswerDAO;
 
 DiscardFeedbackAnswerDAO::DiscardFeedbackAnswerDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool DiscardFeedbackAnswerDAO::addAnswer(DTO::DiscardFeedbackAnswer answer) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};

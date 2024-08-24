@@ -3,13 +3,13 @@
 #include "Category.h"
 #include "FoodItem.h"
 #include "IFoodItemDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <memory>
 
 namespace DAO {
 
 class FoodItemDAO : public IFoodItemDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   FoodItemDAO();

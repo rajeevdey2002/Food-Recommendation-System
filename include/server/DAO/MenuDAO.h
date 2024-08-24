@@ -4,7 +4,7 @@
 #include "DTO/Menu.h"
 #include "DTO/MenuItem.h"
 #include "IMenuDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cstdint>
 #include <vector>
 
@@ -12,7 +12,7 @@
 namespace DAO {
 
 class MenuDAO : public IMenuDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   MenuDAO();

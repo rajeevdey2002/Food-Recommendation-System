@@ -1,6 +1,6 @@
 #include "server/DAO/UserActivityDAO.h"
 #include "ActivityType.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
@@ -9,7 +9,7 @@ using DAO::UserActivityDAO;
 using DTO::UserActivity;
 
 UserActivityDAO::UserActivityDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool UserActivityDAO::addUserActivity(UserActivity userActivity) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};

@@ -1,5 +1,5 @@
 #include "server/DAO/DiscardFeedbackQuestionDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -8,7 +8,7 @@
 using DAO::DiscardFeedbackQuestionDAO;
 
 DiscardFeedbackQuestionDAO::DiscardFeedbackQuestionDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool DiscardFeedbackQuestionDAO::addQuestion(
     DTO::DiscardFeedbackQuestion question) {

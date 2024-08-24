@@ -2,13 +2,13 @@
 
 #include "DTO/Notification.h"
 #include "INotificationDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <memory>
 
 namespace DAO {
 
 class NotificationDAO : public INotificationDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   NotificationDAO();

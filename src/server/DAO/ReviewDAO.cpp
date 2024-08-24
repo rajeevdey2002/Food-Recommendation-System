@@ -1,6 +1,6 @@
 #include "server/DAO/ReviewDAO.h"
 #include "DTO/Review.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -9,7 +9,7 @@
 using DAO::ReviewDAO;
 using DTO::Review;
 
-ReviewDAO::ReviewDAO() : dbConnection{DbConnection::getInstance()} {}
+ReviewDAO::ReviewDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool ReviewDAO::addReview(Review Review) {
   std::shared_ptr<sql::Connection> connection = dbConnection->getConnection();

@@ -1,7 +1,7 @@
 #include "server/DAO/FoodItemDAO.h"
 #include "Category.h"
 #include "DTO/FoodItem.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -15,7 +15,7 @@ using ::DAO::FoodItemDAO;
 using ::DTO::Category;
 using ::DTO::FoodItem;
 
-FoodItemDAO::FoodItemDAO() : dbConnection{DbConnection::getInstance()} {}
+FoodItemDAO::FoodItemDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool FoodItemDAO::addFoodItem(FoodItem foodItem) {
   std::shared_ptr<sql::Connection> connection = dbConnection->getConnection();

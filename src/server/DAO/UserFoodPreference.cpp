@@ -1,5 +1,5 @@
 #include "server/DAO/UserFoodPreferenceDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -8,7 +8,7 @@
 using DAO::UserFoodPreferenceDAO;
 
 UserFoodPreferenceDAO::UserFoodPreferenceDAO()
-    : dbConnection{DbConnection::getInstance()} {}
+    : dbConnection{DatabaseConnection::getInstance()} {}
 
 bool UserFoodPreferenceDAO::addUserFoodPreference(uint64_t userId,
                                                   uint64_t attributeId) {

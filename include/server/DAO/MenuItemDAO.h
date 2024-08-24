@@ -2,7 +2,7 @@
 
 #include "DTO/MenuItem.h"
 #include "IMenuItemDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -10,7 +10,7 @@
 namespace DAO {
 
 class MenuItemDAO : public IMenuItemDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   MenuItemDAO();

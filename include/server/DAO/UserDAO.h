@@ -1,12 +1,12 @@
 #pragma once
 
 #include "IUserDAO.h"
-#include "server/DbConnection.h"
+#include "server/DatabaseConnection.h"
 
 namespace DAO {
 
 class UserDAO : public IUserDAO {
-  std::shared_ptr<DbConnection> dbConnection;
+  std::shared_ptr<DatabaseConnection> dbConnection;
 
 public:
   UserDAO();
