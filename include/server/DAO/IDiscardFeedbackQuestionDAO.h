@@ -2,6 +2,7 @@
 
 #include "DiscardFeedbackQuestion.h"
 #include <cstdint>
+#include <vector>
 namespace DAO {
 
 class IDiscardFeedbackQuestionDAO {

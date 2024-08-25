@@ -11,7 +11,7 @@ using DTO::Attribute;
 
 AttributeDAO::AttributeDAO() : dbConnection{DatabaseConnection::getInstance()} {}
 
-U64 AttributeDAO::addAttribute(SString attributeName) {
+uint64_t AttributeDAO::addAttribute(std::string attributeName) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};
   std::shared_ptr<sql::PreparedStatement> preparedStatement{
       connection->prepareStatement(
@@ -29,7 +29,7 @@ U64 AttributeDAO::addAttribute(SString attributeName) {
   throw std::runtime_error("Failed to get last inserted id");
 }
 
-bool AttributeDAO::removeAttribute(U64 attributeId) {
+bool AttributeDAO::removeAttribute(uint64_t attributeId) {
   std::shared_ptr<sql::Connection> connection{dbConnection->getConnection()};
   std::shared_ptr<sql::PreparedStatement> preparedStatement{
       connection->prepareStatement(

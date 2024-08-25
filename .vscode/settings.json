@@ -66,5 +66,8 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include"
+    ]
 }

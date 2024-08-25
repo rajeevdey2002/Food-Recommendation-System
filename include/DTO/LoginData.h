@@ -5,6 +5,8 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 
+namespace DTO
+{
 struct LoginData {
   uint64_t userId;
   uint64_t roleId;
@@ -20,8 +22,8 @@ struct LoginData {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("userId", userId.getValue(), allocator);
-    doc.AddMember("roleId", roleId.getValue(), allocator);
+    doc.AddMember("userId", userId, allocator);
+    doc.AddMember("roleId", roleId, allocator);
     doc.AddMember("password", rapidjson::Value(password.c_str(), allocator).Move(), allocator);
 
     rapidjson::StringBuffer buffer;
@@ -42,3 +44,4 @@ struct LoginData {
     return LoginData(userId, roleId, password);
   }
 };
+}

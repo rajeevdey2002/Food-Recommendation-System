@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SerializableTypes/SString.h"
-#include "SerializableTypes/Serializable.h"
-#include "SerializableTypes/U64.h"
-
+#include <cstdint>
+#include <stdexcept>
+#include <string>
 namespace DTO {
 
 enum class ActivityType : uint64_t {

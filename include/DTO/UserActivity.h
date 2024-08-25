@@ -23,10 +23,10 @@ struct UserActivity {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("activityId", activityId.getValue(), allocator);
-    doc.AddMember("userId", userId.getValue(), allocator);
-    doc.AddMember("activityTypeId", activityTypeId.getValue(), allocator);
-    doc.AddMember("activityTime", activityTime.getValue(), allocator);
+    doc.AddMember("activityId", activityId, allocator);
+    doc.AddMember("userId", userId, allocator);
+    doc.AddMember("activityTypeId", activityTypeId, allocator);
+    doc.AddMember("activityTime", activityTime, allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

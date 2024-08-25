@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Attribute.h"
+#include <vector>
 
 namespace DAO {
 

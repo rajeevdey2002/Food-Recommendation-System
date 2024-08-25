@@ -8,7 +8,6 @@
 #include <cstdint>
 #include <vector>
 
-
 namespace DAO {
 
 class MenuDAO : public IMenuDAO {

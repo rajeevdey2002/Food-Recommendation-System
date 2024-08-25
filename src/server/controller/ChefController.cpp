@@ -123,18 +123,8 @@ bool ChefController::handleRequest(TcpSocket socket, TCPRequest &request,
   if (std::regex_match(endpoint, match, pattern)) {
     std::string controllerKey = match[2].str();
     if (authRoutes.find(controllerKey) != authRoutes.end()) {
-      for (auto &middleware : preprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
-      }
       if (authRoutes[controllerKey](socketPtr, request, payload)) {
         return true;
-      }
-      for (auto &middleware : postprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
       }
       return true;
     } else {
@@ -144,16 +134,6 @@ bool ChefController::handleRequest(TcpSocket socket, TCPRequest &request,
   return false;
 }
 std::string ChefController::getEndpoint() { return baseAuthEndpoint; }
-
-void ChefController::registerPreprocessorMiddleware(
-    std::shared_ptr<Middleware::IMiddleware> middleware) {
-  preprocessors.push_back(middleware);
-}
-
-void ChefController::registerPostprocessorMiddleware(
-    std::shared_ptr<Middleware::IMiddleware> middleware) {
-  postprocessors.push_back(middleware);
-}
 
 bool ChefController::viewFoodItems(std::shared_ptr<TcpSocket> socket,
                                    TCPRequest &request,

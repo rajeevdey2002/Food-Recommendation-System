@@ -91,18 +91,8 @@ bool AdminController::handleRequest(TcpSocket socket, TCPRequest &request,
   if (std::regex_match(endpoint, match, pattern)) {
     std::string controllerKey = match[2].str();
     if (authRoutes.find(controllerKey) != authRoutes.end()) {
-      for (auto &middleware : preprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
-      }
       if (authRoutes[controllerKey](socketPtr, request, payload)) {
         return true;
-      }
-      for (auto &middleware : postprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
       }
       return true;
     } else {
@@ -113,16 +103,6 @@ bool AdminController::handleRequest(TcpSocket socket, TCPRequest &request,
 }
 
 std::string AdminController::getEndpoint() { return baseAuthEndpoint; }
-
-void AdminController::registerPreprocessorMiddleware(
-    std::shared_ptr<IMiddleware> middleware) {
-  preprocessors.push_back(middleware);
-}
-
-void AdminController::registerPostprocessorMiddleware(
-    std::shared_ptr<IMiddleware> middleware) {
-  postprocessors.push_back(middleware);
-}
 
 bool AdminController::addFoodItem(std::shared_ptr<TcpSocket> socket,
                                   TCPRequest &request,

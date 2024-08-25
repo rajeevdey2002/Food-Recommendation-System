@@ -21,10 +21,10 @@ struct MenuItem {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("menuItemId", menuItemId.getValue(), allocator);
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
-    doc.AddMember("menuId", menuId.getValue(), allocator);
-    doc.AddMember("quantity", quantity.getValue(), allocator);
+    doc.AddMember("menuItemId", menuItemId, allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
+    doc.AddMember("menuId", menuId, allocator);
+    doc.AddMember("quantity", quantity, allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -40,7 +40,7 @@ struct MenuItem {
     uint64_t menuItemId(doc["menuItemId"].GetUint64());
     uint64_t foodItemId(doc["foodItemId"].GetUint64());
     uint64_t menuId(doc["menuId"].GetUint64());
-    uint32_t quantity(doc["quantity"].GetUint32());
+    uint32_t quantity(doc["quantity"].GetUint());
 
     return MenuItem(menuItemId, foodItemId, menuId, quantity);
   }

@@ -28,10 +28,10 @@ struct VotingResult {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
-    doc.AddMember("numberOfVotes", numberOfVotes.getValue(), allocator);
-    doc.AddMember("numberOfPositiveVotes", numberOfPositiveVotes.getValue(), allocator);
-    doc.AddMember("numberOfNegativeVotes", numberOfNegativeVotes.getValue(), allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
+    doc.AddMember("numberOfVotes", numberOfVotes, allocator);
+    doc.AddMember("numberOfPositiveVotes", numberOfPositiveVotes, allocator);
+    doc.AddMember("numberOfNegativeVotes", numberOfNegativeVotes, allocator);
     doc.AddMember("foodItemName", rapidjson::Value(foodItemName.c_str(), allocator).Move(), allocator);
 
     rapidjson::StringBuffer buffer;

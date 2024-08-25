@@ -67,3 +67,5 @@ if (MSVC)
         PRIVATE "/MP"
     )
 endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

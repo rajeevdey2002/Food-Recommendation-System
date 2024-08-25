@@ -36,8 +36,8 @@ Review ReviewDAO::getReviewById(uint64_t ReviewId) {
     uint64_t userId = ReviewResult->getUInt64("userId");
     uint64_t foodItemId = ReviewResult->getUInt64("foodItemId");
     uint32_t rating = ReviewResult->getUInt("rating");
-    SString comment = (std::string)ReviewResult->getString("comment");
-    SString date = (std::string)ReviewResult->getString("date");
+    std::string comment = (std::string)ReviewResult->getString("comment");
+    std::string date = (std::string)ReviewResult->getString("date");
     return Review{ReviewId, userId, foodItemId, rating, comment, date};
   }
   throw std::invalid_argument("Invalid ReviewId, cannot find Review with given "
@@ -58,8 +58,8 @@ std::vector<Review> ReviewDAO::getReviewsByUserId(uint64_t userId) {
     userId = ReviewResult->getUInt64("userId");
     uint64_t foodItemId = ReviewResult->getUInt64("foodItemId");
     int rating = ReviewResult->getInt("rating");
-    SString comment = (std::string)ReviewResult->getString("comment");
-    SString date = (std::string)ReviewResult->getString("date");
+    std::string comment = (std::string)ReviewResult->getString("comment");
+    std::string date = (std::string)ReviewResult->getString("date");
     Reviews.emplace_back(ReviewId, userId, foodItemId, rating, comment, date);
   }
   return Reviews;
@@ -79,8 +79,8 @@ std::vector<Review> ReviewDAO::getReviewsByFoodItemId(uint64_t foodItemId) {
     uint64_t userId = ReviewResult->getUInt64("userId");
     foodItemId = ReviewResult->getUInt64("foodItemId");
     int rating = ReviewResult->getInt("rating");
-    SString comment = (std::string)ReviewResult->getString("comment");
-    SString date = (std::string)ReviewResult->getString("date");
+    std::string comment = (std::string)ReviewResult->getString("comment");
+    std::string date = (std::string)ReviewResult->getString("date");
     Reviews.emplace_back(ReviewId, userId, foodItemId, rating, comment, date);
   }
   return Reviews;
@@ -97,8 +97,8 @@ std::vector<Review> ReviewDAO::getAllReviews() {
     uint64_t userId = ReviewResult->getUInt64("userId");
     uint64_t foodItemId = ReviewResult->getUInt64("foodItemId");
     int rating = ReviewResult->getInt("rating");
-    SString comment = (std::string)ReviewResult->getString("comment");
-    SString date = (std::string)ReviewResult->getString("date");
+    std::string comment = (std::string)ReviewResult->getString("comment");
+    std::string date = (std::string)ReviewResult->getString("date");
     Reviews.emplace_back(ReviewId, userId, foodItemId, rating, comment, date);
   }
   return Reviews;

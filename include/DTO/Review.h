@@ -28,12 +28,12 @@ struct Review {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("ReviewId", ReviewId.getValue(), allocator);
-    doc.AddMember("userId", userId.getValue(), allocator);
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
-    doc.AddMember("rating", rating.getValue(), allocator);
-    doc.AddMember("comment", rapidjson::Value().SetString(comment.getValue().c_str(), allocator), allocator);
-    doc.AddMember("date", rapidjson::Value().SetString(date.getValue().c_str(), allocator), allocator);
+    doc.AddMember("ReviewId", ReviewId, allocator);
+    doc.AddMember("userId", userId, allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
+    doc.AddMember("rating", rating, allocator);
+    doc.AddMember("comment", rapidjson::Value().SetString(comment.c_str(), allocator), allocator);
+    doc.AddMember("date", rapidjson::Value().SetString(date.c_str(), allocator), allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

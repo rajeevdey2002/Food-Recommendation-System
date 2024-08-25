@@ -31,11 +31,11 @@ struct FoodItem {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
-    doc.AddMember("price", price.getValue(), allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
+    doc.AddMember("price", price, allocator);
     doc.AddMember("availabilityStatus", availabilityStatus, allocator);
     doc.AddMember("isDiscarded", isDiscarded, allocator);
-    doc.AddMember("foodItemTypeId", foodItemTypeId.getValue(), allocator);
+    doc.AddMember("foodItemTypeId", foodItemTypeId, allocator);
     doc.AddMember("itemName", rapidjson::Value(itemName.c_str(), allocator).Move(), allocator);
 
     rapidjson::StringBuffer buffer;

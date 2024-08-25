@@ -23,9 +23,9 @@ struct Menu {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("menuId", menuId.getValue(), allocator);
+    doc.AddMember("menuId", menuId, allocator);
     doc.AddMember("menuName", rapidjson::Value(menuName.c_str(), allocator).Move(), allocator);
-    doc.AddMember("categoryId", categoryId.getValue(), allocator);
+    doc.AddMember("categoryId", categoryId, allocator);
     doc.AddMember("isSurvey", isSurvey, allocator);
     doc.AddMember("date", rapidjson::Value(date.c_str(), allocator).Move(), allocator);
 

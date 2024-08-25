@@ -9,8 +9,6 @@
 namespace Controller {
 
 class ChefController : public IController {
-  std::vector<std::shared_ptr<IMiddleware>> preprocessors;
-  std::vector<std::shared_ptr<IMiddleware>> postprocessors;
 
   std::shared_ptr<Service::UserService> userService;
   std::shared_ptr<Service::FoodItemService> foodItemService;
@@ -74,10 +72,6 @@ public:
   bool handleRequest(TcpSocket socket, TCPRequest &request,
                      std::vector<unsigned char> &payload) override;
   std::string getEndpoint() override;
-  void registerPreprocessorMiddleware(
-      std::shared_ptr<Middleware::IMiddleware> middleware) override;
-  void registerPostprocessorMiddleware(
-      std::shared_ptr<Middleware::IMiddleware> middleware) override;
 };
 
 }; // namespace Controller

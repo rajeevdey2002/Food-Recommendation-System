@@ -2,6 +2,7 @@
 
 #include "Feedback.h"
 #include <cstdint>
+#include <vector>
 namespace DAO {
 
 using DTO::Feedback;

@@ -21,9 +21,9 @@ struct Notification {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("notificationId", notificationId.getValue(), allocator);
-    doc.AddMember("message", rapidjson::Value().SetString(message.getValue().c_str(), allocator), allocator);
-    doc.AddMember("date", rapidjson::Value().SetString(date.getValue().c_str(), allocator), allocator);
+    doc.AddMember("notificationId", notificationId, allocator);
+    doc.AddMember("message", rapidjson::Value().SetString(message.c_str(), allocator), allocator);
+    doc.AddMember("date", rapidjson::Value().SetString(date.c_str(), allocator), allocator);
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);

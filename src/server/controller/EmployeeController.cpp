@@ -109,18 +109,8 @@ bool EmployeeController::handleRequest(TcpSocket socket, TCPRequest &request,
   if (std::regex_match(endpoint, match, pattern)) {
     std::string controllerKey = match[2].str();
     if (authRoutes.find(controllerKey) != authRoutes.end()) {
-      for (auto &middleware : preprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
-      }
       if (authRoutes[controllerKey](socketPtr, request, payload)) {
         return true;
-      }
-      for (auto &middleware : postprocessors) {
-        if (middleware->handleRequest(socketPtr, request, payload)) {
-          return true;
-        }
       }
     }
   }
@@ -128,16 +118,6 @@ bool EmployeeController::handleRequest(TcpSocket socket, TCPRequest &request,
 }
 
 std::string EmployeeController::getEndpoint() { return baseAuthEndpoint; }
-
-void EmployeeController::registerPreprocessorMiddleware(
-    std::shared_ptr<Middleware::IMiddleware> middleware) {
-  preprocessors.push_back(middleware);
-}
-
-void EmployeeController::registerPostprocessorMiddleware(
-    std::shared_ptr<Middleware::IMiddleware> middleware) {
-  postprocessors.push_back(middleware);
-}
 
 bool EmployeeController::viewMenu(std::shared_ptr<TcpSocket> socket,
                                   TCPRequest &request,

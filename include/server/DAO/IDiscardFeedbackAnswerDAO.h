@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DTO/DiscardFeedbackAnswer.h"
+#include <vector>
 
 namespace DAO {
 class IDiscardFeedbackAnswerDAO {

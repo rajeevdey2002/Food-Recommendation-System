@@ -28,9 +28,9 @@ struct Feedback {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("feedbackId", feedbackId.getValue(), allocator);
-    doc.AddMember("userId", userId.getValue(), allocator);
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
+    doc.AddMember("feedbackId", feedbackId, allocator);
+    doc.AddMember("userId", userId, allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
     doc.AddMember("preference", preference, allocator);
     doc.AddMember("date", rapidjson::Value(date.c_str(), allocator).Move(), allocator);
 

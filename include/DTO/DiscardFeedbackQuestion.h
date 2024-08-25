@@ -22,8 +22,8 @@ struct DiscardFeedbackQuestion {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-    doc.AddMember("questionId", questionId.getValue(), allocator);
-    doc.AddMember("foodItemId", foodItemId.getValue(), allocator);
+    doc.AddMember("questionId", questionId, allocator);
+    doc.AddMember("foodItemId", foodItemId, allocator);
     doc.AddMember("question", rapidjson::Value(question.c_str(), allocator).Move(), allocator);
 
     rapidjson::StringBuffer buffer;

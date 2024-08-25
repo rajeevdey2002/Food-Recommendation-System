@@ -2,6 +2,7 @@
 
 #include "IUserActivityDAO.h"
 #include "UserActivity.h"
+#include <vector>
 
 namespace DAO {
 
