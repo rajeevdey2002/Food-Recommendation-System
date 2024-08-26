@@ -2,7 +2,6 @@
 #include "Category.h"
 #include "FoodItem.h"
 #include <algorithm>
-#include <cstdint>
 #include <limits>
 
 using Service::RecommendationService;

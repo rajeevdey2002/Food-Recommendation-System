@@ -93,7 +93,7 @@ FoodItemService::getReviewsByUserId(uint64_t userId, uint64_t foodItemId) {
   auto reviews = getReviewsByUserId(userId);
   std::vector<DTO::Review> filteredReviews;
   for (auto review : reviews) {
-    if (review.foodItemId == (U64)foodItemId) {
+    if (review.foodItemId == foodItemId) {
       filteredReviews.push_back(review);
     }
   }

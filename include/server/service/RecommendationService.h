@@ -24,7 +24,7 @@ private:
 public:
   RecommendationService(std::shared_ptr<DAO::IReviewDAO> ReviewDAO,
                         std::shared_ptr<DAO::IFoodItemDAO> foodItemDAO);
-  std::vector<DTO::FoodItem> getRecommendedFoodItems(DTO::Category, U32 count);
+  std::vector<DTO::FoodItem> getRecommendedFoodItems(DTO::Category, uint32_t count);
   double getFoodItemRating(uint64_t foodItemId);
   std::vector<DTO::FoodItem> getFoodItemsBelowRating(double rating);
   std::vector<std::pair<double, std::vector<std::string>>>
