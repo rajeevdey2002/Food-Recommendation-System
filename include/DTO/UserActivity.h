@@ -18,8 +18,7 @@ struct UserActivity {
   UserActivity(uint64_t activityId, uint64_t userId, uint64_t activityTypeId, uint64_t activityTime)
       : activityId(activityId), userId(userId), activityTypeId(activityTypeId), activityTime(activityTime) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -31,14 +30,9 @@ struct UserActivity {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static UserActivity fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static UserActivity fromJson(rapidjson::Document &doc) {
     uint64_t activityId(doc["activityId"].GetUint64());
     uint64_t userId(doc["userId"].GetUint64());
     uint64_t activityTypeId(doc["activityTypeId"].GetUint64());

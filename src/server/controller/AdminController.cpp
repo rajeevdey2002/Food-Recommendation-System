@@ -1,129 +1,128 @@
 #include "server/controller/AdminController.h"
 #include "Category.h"
 #include "FoodItem.h"
+#include "Functionalities/Actions.h"
+#include "User.h"
+#include <asm-generic/errno.h>
+#include <cstdint>
+#include <rapidjson/document.h>
 #include <regex>
+#include <sys/types.h>
+#include <utility>
 
 using Controller::AdminController;
 
 AdminController::AdminController(
-    const std::string &authEndpoint,
     std::shared_ptr<Service::UserService> userService,
     std::shared_ptr<Service::FoodItemService> foodItemService)
-    : baseAuthEndpoint(authEndpoint), userService(userService),
+    : userService(userService),
       foodItemService(foodItemService) {
-  authRoutes.insert(
-      {"/addFoodItem",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::ADD_FOOD_ITEM,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->addFoodItem(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/removeFoodItem",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::REMOVE_FOOD_ITEM,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->removeFoodItem(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/updateFoodItem",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::UPDATE_FOOD_ITEM,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->updateFoodItem(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getFoodItems",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::GET_FOOD_ITEMS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->getFoodItems(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/addUser",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::ADD_USER,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->addUser(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewNotifications",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::VIEW_NOTIFICATIONS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewNotifications(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/addFoodAttribute",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::ADD_FOOD_ITEM_ATTRIBUTE,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->addFoodItemAttribute(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getAllAttributes",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::GET_ALL_ATTRIBUTES,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->getAllAttributes(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewAttributes",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::VIEW_FOOD_ITEM_ATTRIBUTES,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewFoodItemAttributes(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/removeAttribute",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::REMOVE_ATTRIBUTE,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->removeAttribute(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/addAttribute",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {AdminActions::ADD_ATTRIBUTE,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->addAttribute(socket, request, payload);
        }});
 };
 
-bool AdminController::handleRequest(TcpSocket socket, TCPRequest &request,
-                                    std::vector<unsigned char> &payload) {
-  std::string endpoint = request.protocolHeader.endpoint;
-  std::smatch match;
-  // Matches a string starting with a slash, followed by non-slash characters
-  // (group 1), and optionally the rest starting from another slash (group 2)
-  std::regex pattern(R"(^(/[^/]+)(/.*)?$)");
-  std::shared_ptr<TcpSocket> socketPtr =
+bool AdminController::handleRequest(TcpSocket socket,
+                                    rapidjson::Document &request,
+                                    rapidjson::Document &payload) {
+
+  if (request.HasMember("action") && request["action"].IsInt()) {
+    int action = request["action"].GetInt();
+    if (actions.count((AdminActions)action) > 0)
+    {
+      std::shared_ptr<TcpSocket> socketPtr =
       std::make_shared<TcpSocket>(std::move(socket));
-  if (std::regex_match(endpoint, match, pattern)) {
-    std::string controllerKey = match[2].str();
-    if (authRoutes.find(controllerKey) != authRoutes.end()) {
-      if (authRoutes[controllerKey](socketPtr, request, payload)) {
-        return true;
-      }
-      return true;
-    } else {
-      std::cout << "No route found for: " << controllerKey << std::endl;
+      return actions[(AdminActions)action](socketPtr, request, payload);
     }
   }
   return false;
 }
 
-std::string AdminController::getEndpoint() { return baseAuthEndpoint; }
-
 bool AdminController::addFoodItem(std::shared_ptr<TcpSocket> socket,
-                                  TCPRequest &request,
-                                  std::vector<unsigned char> &payload) {
+                                  rapidjson::Document &request,
+                                  rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    DTO::FoodItem foodItem;
-    foodItem.deserialize(payload);
+    DTO::FoodItem foodItem = DTO::FoodItem::fromJson(payload);
     if (foodItemService->addFoodItem(foodItem)) {
-      std::vector<unsigned char> responsePayload;
       writeResponse(responseBuffer, request, 0, responsePayload);
     } else {
-      SString responseString{"Failed to add food item"};
-      std::vector<unsigned char> responsePayload = responseString.serialize();
+      std::string responseString{"Failed to add food item"};
+      responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
       writeResponse(responseBuffer, request, 400, responsePayload);
     }
   } catch (std::exception &e) {
     std::cout << "Error adding food item: " << e.what() << std::endl;
-    SString responseString{"Failed to add food item due to : " +
+    std::string responseString{"Failed to add food item due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+      responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -136,25 +135,34 @@ bool AdminController::addFoodItem(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::removeFoodItem(std::shared_ptr<TcpSocket> socket,
-                                     TCPRequest &request,
-                                     std::vector<unsigned char> &payload) {
+                                     rapidjson::Document &request,
+                                     rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    U64 foodItemId;
-    foodItemId.deserialize(payload);
+    uint64_t foodItemId;
+    if (payload.HasMember("foodItemId") && payload["foodItemId"].IsUint64())
+    {
+      foodItemId = payload["foodItemId"].GetUint64();
+    }
+    else {
+      return false;
+    }
     if (foodItemService->deleteFoodItem(foodItemId)) {
-      std::vector<unsigned char> responsePayload;
       writeResponse(responseBuffer, request, 0, responsePayload);
     } else {
-      SString responseString{"Failed to remove food item"};
-      std::vector<unsigned char> responsePayload = responseString.serialize();
+      std::string responseString{"Failed to remove food item"};
+      responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
       writeResponse(responseBuffer, request, 400, responsePayload);
     }
   } catch (std::exception &e) {
     std::cout << "Error removing food item: " << e.what() << std::endl;
-    SString responseString{"Failed to remove food item due to : " +
+    std::string responseString{"Failed to remove food item due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+    responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -167,25 +175,27 @@ bool AdminController::removeFoodItem(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::updateFoodItem(std::shared_ptr<TcpSocket> socket,
-                                     TCPRequest &request,
-                                     std::vector<unsigned char> &payload) {
+                                     rapidjson::Document &request,
+                                     rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    DTO::FoodItem foodItem;
-    foodItem.deserialize(payload);
+    DTO::FoodItem foodItem = DTO::FoodItem::fromJson(payload);
     if (foodItemService->updateFoodItem(foodItem)) {
-      std::vector<unsigned char> responsePayload;
       writeResponse(responseBuffer, request, 0, responsePayload);
     } else {
-      SString responseString{"Failed to update food item"};
-      std::vector<unsigned char> responsePayload = responseString.serialize();
+      std::string responseString{"Failed to update food item"};
+      responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
       writeResponse(responseBuffer, request, 400, responsePayload);
     }
   } catch (std::exception &e) {
     std::cout << "Error updating food item: " << e.what() << std::endl;
-    SString responseString{"Failed to update food item due to : " +
+    std::string responseString{"Failed to update food item due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+    responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -198,24 +208,43 @@ bool AdminController::updateFoodItem(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::getFoodItems(std::shared_ptr<TcpSocket> socket,
-                                   TCPRequest &request,
-                                   std::vector<unsigned char> &payload) {
+                                   rapidjson::Document &request,
+                                   rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    U64 categoryId;
-    categoryId.deserialize(payload);
+    uint64_t categoryId;
+    if (payload.HasMember("categoryId") && payload["categoryId"].IsUint64())
+    {
+      categoryId = payload["categoryId"].GetUint64();
+    }
+    else {
+      return false;
+    }
     std::vector<DTO::FoodItem> foodItems =
         foodItemService->getFoodItemsByCategory(
             (DTO::Category)(uint64_t)categoryId);
-    std::vector<unsigned char> responsePayload;
-    Array<DTO::FoodItem> foodItemsArray{foodItems};
-    responsePayload = foodItemsArray.serialize();
-    writeResponse(responseBuffer, request, 0, responsePayload);
+    rapidjson::Value foodItemsArray(rapidjson::kArrayType);
+        auto& allocator = responsePayload.GetAllocator();
+
+        for (const auto& item : foodItems) {
+            rapidjson::Document itemDoc;
+            itemDoc.SetObject();
+            item.toJson(itemDoc);
+            rapidjson::Value itemValue;
+            itemValue.CopyFrom(itemDoc, allocator);
+            foodItemsArray.PushBack(itemValue, allocator);
+        }
+        responsePayload.AddMember("foodItems", foodItemsArray, allocator);
+        writeResponse(responseBuffer, request, 0, responsePayload);
   } catch (std::exception &e) {
     std::cout << "Error getting food items: " << e.what() << std::endl;
-    SString responseString{"Failed to get food items due to : " +
+    std::string responseString{"Failed to get food items due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+    responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -228,25 +257,27 @@ bool AdminController::getFoodItems(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::addUser(std::shared_ptr<TcpSocket> socket,
-                              TCPRequest &request,
-                              std::vector<unsigned char> &payload) {
+                              rapidjson::Document &request,
+                              rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    DTO::User user;
-    user.deserialize(payload);
+    DTO::User user = DTO::User::fromJson(payload);
     if (userService->addUser(user)) {
-      std::vector<unsigned char> responsePayload;
       writeResponse(responseBuffer, request, 0, responsePayload);
     } else {
-      SString responseString{"Failed to add user"};
-      std::vector<unsigned char> responsePayload = responseString.serialize();
+      std::string responseString{"Failed to add user"};
+      responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
       writeResponse(responseBuffer, request, 400, responsePayload);
     }
   } catch (std::exception &e) {
     std::cout << "Error adding user: " << e.what() << std::endl;
-    SString responseString{"Failed to add user due to : " +
+    std::string responseString{"Failed to add user due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+    responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -259,23 +290,42 @@ bool AdminController::addUser(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::viewNotifications(std::shared_ptr<TcpSocket> socket,
-                                        TCPRequest &request,
-                                        std::vector<unsigned char> &payload) {
+                                        rapidjson::Document &request,
+                                        rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    U64 userId;
-    userId.deserialize(payload);
+    uint64_t userId;
+    if (payload.HasMember("userId") && payload["userId"].IsUint64())
+    {
+      userId = payload["userId"].GetUint64();
+    }
+    else {
+      return false;
+    }
     std::vector<DTO::Notification> notifications =
         userService->getUnreadNotifications(userId);
-    std::vector<unsigned char> responsePayload;
-    Array<DTO::Notification> notificationsArray{notifications};
-    responsePayload = notificationsArray.serialize();
-    writeResponse(responseBuffer, request, 0, responsePayload);
+    rapidjson::Value notificationsArray(rapidjson::kArrayType);
+        auto& allocator = responsePayload.GetAllocator();
+
+        for (const auto& notification : notifications) {
+            rapidjson::Document itemDoc;
+            itemDoc.SetObject();
+            notification.toJson(itemDoc);
+            rapidjson::Value itemValue;
+            itemValue.CopyFrom(itemDoc, allocator);
+            notificationsArray.PushBack(itemValue, allocator);
+        }
+        responsePayload.AddMember("notifications", notificationsArray, allocator);
+        writeResponse(responseBuffer, request, 0, responsePayload);
   } catch (std::exception &e) {
     std::cout << "Error getting notifications: " << e.what() << std::endl;
-    SString responseString{"Failed to get notifications due to : " +
+    std::string responseString{"Failed to get notifications due to : " +
                            std::string(e.what())};
-    std::vector<unsigned char> responsePayload = responseString.serialize();
+    responsePayload.AddMember("message", responseString, responsePayload.GetAllocator());
     writeResponse(responseBuffer, request, 400, responsePayload);
   }
   try {
@@ -288,20 +338,24 @@ bool AdminController::viewNotifications(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::addFoodItemAttribute(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
+  rapidjson::Document responsePayload;
+  if (!responsePayload.IsObject()) {
+        responsePayload.SetObject();
+    }
   try {
-    Pair<U64, U64> data;
+    std::pair<uint64_t, uint64_t> data;
     data.deserialize(payload);
-    U64 foodItemId = data.first;
-    U64 attributeId = data.second;
+    uint64_t foodItemId = data.first;
+    uint64_t attributeId = data.second;
     foodItemService->addAttributeToFoodItem(foodItemId, attributeId);
     std::vector<unsigned char> responsePayload;
     writeResponse(responseBuffer, request, 0, responsePayload);
   } catch (std::exception &e) {
     std::cout << "Error adding attribute: " << e.what() << std::endl;
-    SString responseString{"Failed to add attribute due to : " +
+    std::string responseString{"Failed to add attribute due to : " +
                            std::string(e.what())};
     std::vector<unsigned char> responsePayload = responseString.serialize();
     writeResponse(responseBuffer, request, 400, responsePayload);
@@ -316,22 +370,22 @@ bool AdminController::addFoodItemAttribute(
 }
 
 bool AdminController::getAllAttributes(std::shared_ptr<TcpSocket> socket,
-                                       TCPRequest &request,
-                                       std::vector<unsigned char> &payload) {
+                                       rapidjson::Document &request,
+                                       rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
   try {
     std::vector<std::pair<uint64_t, std::string>> attributes =
         foodItemService->getAllAttributes();
-    Array<Pair<U64, SString>> attributesArray;
+    Array<Pair<uint64_t, std::string>> attributesArray;
     for (auto &attribute : attributes) {
       attributesArray.push_back(
-          Pair<U64, SString>{attribute.first, attribute.second});
+          Pair<uint64_t, std::string>{attribute.first, attribute.second});
     }
     auto payload = attributesArray.serialize();
     writeResponse(responseBuffer, request, 0, payload);
   } catch (std::exception &e) {
     std::cout << "Error getting attributes: " << e.what() << std::endl;
-    SString responseString{"Failed to get attributes due to : " +
+    std::string responseString{"Failed to get attributes due to : " +
                            std::string(e.what())};
     auto payload = responseString.serialize();
     writeResponse(responseBuffer, request, 400, payload);
@@ -346,27 +400,27 @@ bool AdminController::getAllAttributes(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::viewFoodItemAttributes(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::cout << "running view FoodItem Attributes\n";
   std::vector<unsigned char> responseBuffer;
   try {
-    U64 foodItemId;
+    uint64_t foodItemId;
     foodItemId.deserialize(payload);
     std::vector<std::pair<uint64_t, std::string>> attributes =
         foodItemService->getFoodItemAttributes(foodItemId);
 
-    Array<Pair<U64, SString>> attributesArray;
+    Array<Pair<uint64_t, std::string>> attributesArray;
     for (auto &attribute : attributes) {
       attributesArray.push_back(
-          Pair<U64, SString>{attribute.first, attribute.second});
+          Pair<uint64_t, std::string>{attribute.first, attribute.second});
     }
     std::vector<unsigned char> payload = attributesArray.serialize();
     writeResponse(responseBuffer, request, 0, payload);
   } catch (std::exception &e) {
     std::cout << "Error getting food item attributes: " << e.what()
               << std::endl;
-    SString responseString{"Failed to get food item attributes due to : " +
+    std::string responseString{"Failed to get food item attributes due to : " +
                            std::string(e.what())};
     std::vector<unsigned char> payload = responseString.serialize();
     writeResponse(responseBuffer, request, 400, payload);
@@ -381,20 +435,20 @@ bool AdminController::viewFoodItemAttributes(
 }
 
 bool AdminController::removeAttribute(std::shared_ptr<TcpSocket> socket,
-                                      TCPRequest &request,
-                                      std::vector<unsigned char> &payload) {
+                                      rapidjson::Document &request,
+                                      rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
   try {
-    Pair<U64, U64> data;
+    Pair<uint64_t, uint64_t> data;
     data.deserialize(payload);
-    U64 foodItemId = data.first;
-    U64 attributeId = data.second;
+    uint64_t foodItemId = data.first;
+    uint64_t attributeId = data.second;
     foodItemService->removeAttributeFromFoodItem(foodItemId, attributeId);
     std::vector<unsigned char> responsePayload;
     writeResponse(responseBuffer, request, 0, responsePayload);
   } catch (std::exception &e) {
     std::cout << "Error removing attribute: " << e.what() << std::endl;
-    SString responseString{"Failed to remove attribute due to : " +
+    std::string responseString{"Failed to remove attribute due to : " +
                            std::string(e.what())};
     std::vector<unsigned char> responsePayload = responseString.serialize();
     writeResponse(responseBuffer, request, 400, responsePayload);
@@ -409,23 +463,23 @@ bool AdminController::removeAttribute(std::shared_ptr<TcpSocket> socket,
 }
 
 bool AdminController::addAttribute(std::shared_ptr<TcpSocket> socket,
-                                   TCPRequest &request,
-                                   std::vector<unsigned char> &payload) {
+                                   rapidjson::Document &request,
+                                   rapidjson::Document &payload) {
   std::vector<unsigned char> responseBuffer;
   try {
-    SString attribute;
+    std::string attribute;
     attribute.deserialize(payload);
     if (foodItemService->addAttribute(attribute)) {
       std::vector<unsigned char> responsePayload;
       writeResponse(responseBuffer, request, 0, responsePayload);
     } else {
-      SString responseString{"Failed to add attribute"};
+      std::string responseString{"Failed to add attribute"};
       std::vector<unsigned char> responsePayload = responseString.serialize();
       writeResponse(responseBuffer, request, 400, responsePayload);
     }
   } catch (std::exception &e) {
     std::cout << "Error adding attribute: " << e.what() << std::endl;
-    SString responseString{"Failed to add attribute due to : " +
+    std::string responseString{"Failed to add attribute due to : " +
                            std::string(e.what())};
     std::vector<unsigned char> responsePayload = responseString.serialize();
     writeResponse(responseBuffer, request, 400, responsePayload);

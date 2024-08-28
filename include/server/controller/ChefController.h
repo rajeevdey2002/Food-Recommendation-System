@@ -1,5 +1,13 @@
 #pragma once
 
+#include <functional>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include "AdminController.h"
+#include "Sockets/TcpSocket.h"
+
+#include "Functionalities/Actions.h"
 #include "IController.h"
 #include "server/service/FoodItemService.h"
 #include "server/service/MenuService.h"
@@ -15,63 +23,60 @@ class ChefController : public IController {
   std::shared_ptr<Service::MenuService> menuService;
   std::shared_ptr<Service::RecommendationService> recommendationService;
 
-  std::string baseAuthEndpoint;
   std::unordered_map<
-      std::string,
-      std::function<bool(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                         std::vector<unsigned char> &payload)>>
-      authRoutes;
-  void registerRoutes();
+      ChefActions,
+      std::function<bool(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                         rapidjson::Document &payload)>>
+      actions;
+  void registerActions();
 
   bool getRecommendedMenu(std::shared_ptr<TcpSocket> socket,
-                          TCPRequest &request,
-                          std::vector<unsigned char> &payload);
-  bool rolloutMenu(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                   std::vector<unsigned char> &payload);
-  bool createMenu(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                  std::vector<unsigned char> &payload);
-  bool viewRolloutMenu(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                       std::vector<unsigned char> &payload);
-  bool viewMenu(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                std::vector<unsigned char> &payload);
-  bool updateMenu(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                  std::vector<unsigned char> &payload);
+                          rapidjson::Document &request,
+                          rapidjson::Document &payload);
+  bool rolloutMenu(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                   rapidjson::Document &payload);
+  bool createMenu(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                  rapidjson::Document &payload);
+  bool viewRolloutMenu(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                       rapidjson::Document &payload);
+  bool viewMenu(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                rapidjson::Document &payload);
+  bool updateMenu(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                  rapidjson::Document &payload);
   bool viewRolloutFeedback(std::shared_ptr<TcpSocket> socket,
-                           TCPRequest &request,
-                           std::vector<unsigned char> &payload);
-  bool viewNotifications(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                         std::vector<unsigned char> &payload);
-  bool viewFoodItems(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                     std::vector<unsigned char> &payload);
+                           rapidjson::Document &request,
+                           rapidjson::Document &payload);
+  bool viewNotifications(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                         rapidjson::Document &payload);
+  bool viewFoodItems(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                     rapidjson::Document &payload);
 
   bool addDiscardFeedbackQuestion(std::shared_ptr<TcpSocket> socket,
-                                  TCPRequest &request,
-                                  std::vector<unsigned char> &payload);
-  bool discardFoodItem(std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-                       std::vector<unsigned char> &payload);
+                                  rapidjson::Document &request,
+                                  rapidjson::Document &payload);
+  bool discardFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+                       rapidjson::Document &payload);
   bool viewDiscardFeedbackAnswerSentiments(std::shared_ptr<TcpSocket> socket,
-                                           TCPRequest &request,
-                                           std::vector<unsigned char> &payload);
+                                           rapidjson::Document &request,
+                                           rapidjson::Document &payload);
   bool viewDiscardFeedbackQuestions(std::shared_ptr<TcpSocket> socket,
-                                    TCPRequest &request,
-                                    std::vector<unsigned char> &payload);
+                                    rapidjson::Document &request,
+                                    rapidjson::Document &payload);
   bool getFoodItemsBelowRating(std::shared_ptr<TcpSocket> socket,
-                               TCPRequest &request,
-                               std::vector<unsigned char> &payload);
+                               rapidjson::Document &request,
+                               rapidjson::Document &payload);
   bool getDiscardedFoodItems(std::shared_ptr<TcpSocket> socket,
-                             TCPRequest &request,
-                             std::vector<unsigned char> &payload);
+                             rapidjson::Document &request,
+                             rapidjson::Document &payload);
 
 public:
   ChefController(
-      const std::string &authEndpoint,
       std::shared_ptr<Service::UserService> userService,
       std::shared_ptr<Service::FoodItemService> foodItemService,
       std::shared_ptr<Service::MenuService> menuService,
       std::shared_ptr<Service::RecommendationService> recommendationService);
-  bool handleRequest(TcpSocket socket, TCPRequest &request,
-                     std::vector<unsigned char> &payload) override;
-  std::string getEndpoint() override;
+  bool handleRequest(TcpSocket socket, rapidjson::Document &request,
+                     rapidjson::Document &payload) override;
 };
 
 }; // namespace Controller

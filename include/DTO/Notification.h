@@ -16,8 +16,7 @@ struct Notification {
   Notification(uint64_t notificationId, std::string message, std::string date)
       : notificationId(notificationId), message(message), date(date) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -28,14 +27,9 @@ struct Notification {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static Notification fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static Notification fromJson(rapidjson::Document &doc) {
     uint64_t notificationId(doc["notificationId"].GetUint64());
     std::string message(doc["message"].GetString());
     std::string date(doc["date"].GetString());

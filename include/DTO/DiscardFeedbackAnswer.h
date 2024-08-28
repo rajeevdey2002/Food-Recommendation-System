@@ -18,8 +18,7 @@ struct DiscardFeedbackAnswer {
   DiscardFeedbackAnswer(uint64_t answerId, uint64_t questionId, uint64_t userId, std::string answer)
       : answerId(answerId), questionId(questionId), userId(userId), answer(answer) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -31,14 +30,9 @@ struct DiscardFeedbackAnswer {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static DiscardFeedbackAnswer fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static DiscardFeedbackAnswer fromJson(rapidjson::Document &doc) {
     uint64_t answerId(doc["answerId"].GetUint64());
     uint64_t questionId(doc["questionId"].GetUint64());
     uint64_t userId(doc["userId"].GetUint64());

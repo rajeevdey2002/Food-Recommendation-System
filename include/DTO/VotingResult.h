@@ -23,8 +23,7 @@ struct VotingResult {
         numberOfNegativeVotes(numberOfNegativeVotes),
         foodItemName(foodItemName) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -37,14 +36,9 @@ struct VotingResult {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static VotingResult fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static VotingResult fromJson(rapidjson::Document &doc) {
     uint64_t foodItemId(doc["foodItemId"].GetUint64());
     uint64_t numberOfVotes(doc["numberOfVotes"].GetUint64());
     uint64_t numberOfPositiveVotes(doc["numberOfPositiveVotes"].GetUint64());

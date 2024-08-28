@@ -26,8 +26,7 @@ struct FoodItem {
         availabilityStatus(availabilityStatus), isDiscarded(isDiscarded),
         foodItemTypeId(foodItemTypeId), itemName(itemName) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -41,14 +40,9 @@ struct FoodItem {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static FoodItem fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static FoodItem fromJson(rapidjson::Document &doc) {
     uint64_t foodItemId(doc["foodItemId"].GetUint64());
     double price(doc["price"].GetDouble());
     bool availabilityStatus = doc["availabilityStatus"].GetBool();

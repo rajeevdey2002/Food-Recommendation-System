@@ -7,6 +7,8 @@
 #include "Role.h"
 #include <algorithm>
 #include <ios>
+#include <ostream>
+#include <rapidjson/document.h>
 #include <stdexcept>
 
 void AdminHandler::displayFoodItems(std::vector<DTO::FoodItem> &foodItems) {
@@ -70,18 +72,24 @@ void AdminHandler::addFoodItem() {
       [](const bool &input) { return input == 0 || input == 1; });
   DTO::FoodItem foodItem(0, price, availabilityStatus, false,
                          (uint64_t)category, itemName);
-  std::vector<unsigned char> payload = foodItem.serialize();
-  ClientCommunicator clientCommunicator(SERVER_IP, SERVER_PORT);
-  clientCommunicator.sendRequest(user.userId, (uint64_t)roleId,
-                                 "/Admin/addFoodItem", payload);
-  auto response = clientCommunicator.receiveResponse();
-  if (response.first == 0) {
+  rapidjson::Document request;
+  if (!request.IsObject()) {
+        request.SetObject();
+  }
+  /*std::vector<unsigned char> payload =*/ foodItem.toJson(request);
+  // ClientCommunicator clientCommunicator(SERVER_IP, SERVER_PORT);
+  // clientCommunicator.sendRequest(user.userId, (uint64_t)roleId,
+  //                                "/Admin/addFoodItem", payload);
+  // auto response = clientCommunicator.receiveResponse();
+  rapidjson::Document response;
+  if (response.HasMember("statusCode") && response["statusCode"].GetInt() == 0) {
     std::cout << "Food item added successfully\n";
-  } else {
-    std::string responseString;
-    responseString.deserialize(response.second);
+  } else if (response.HasMember("message")) {
     std::cout << "Failed to add food item, due to : "
-              << (std::string)responseString << std::endl;
+              << response["message"].GetString() << std::endl;
+  }
+  else {
+    std::cout << "Failed to add foodItem!" << std::endl;
   }
 }
 

@@ -17,8 +17,7 @@ struct DiscardFeedbackQuestion {
   DiscardFeedbackQuestion(uint64_t questionId, uint64_t foodItemId, std::string question)
       : questionId(questionId), foodItemId(foodItemId), question(question) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -29,13 +28,9 @@ struct DiscardFeedbackQuestion {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static DiscardFeedbackQuestion fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
+  static DiscardFeedbackQuestion fromJson(rapidjson::Document &doc) {
 
     uint64_t questionId(doc["questionId"].GetUint64());
     uint64_t foodItemId(doc["foodItemId"].GetUint64());

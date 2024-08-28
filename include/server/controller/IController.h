@@ -11,9 +11,8 @@ namespace Controller {
 
 class IController {
 public:
-  virtual bool handleRequest(TcpSocket socket, rapidjson::Document request,
+  virtual bool handleRequest(TcpSocket socket, rapidjson::Document &request,
                              rapidjson::Document &payload) = 0;
-  virtual std::string getEndpoint() = 0;
   virtual ~IController() = default;
 };
 }; // namespace Controller

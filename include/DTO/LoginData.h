@@ -16,9 +16,7 @@ struct LoginData {
 
   LoginData(uint64_t userId, uint64_t roleId, std::string password)
       : userId(userId), roleId(roleId), password(password) {}
-
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -29,14 +27,9 @@ struct LoginData {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static LoginData fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static LoginData fromJson(rapidjson::Document &doc) {
     uint64_t userId(doc["userId"].GetUint64());
     uint64_t roleId(doc["roleId"].GetUint64());
     std::string password(doc["password"].GetString());

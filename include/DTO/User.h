@@ -19,8 +19,7 @@ struct User {
   User(uint64_t userId, std::string name, std::string password, uint64_t roleId, uint64_t lastNotificationId)
       : userId(userId), name(name), password(password), roleId(roleId), lastNotificationId(lastNotificationId) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -33,14 +32,9 @@ struct User {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static User fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static User fromJson(rapidjson::Document &doc) {
     uint64_t userId = doc["userId"].GetUint64();
     std::string name = doc["name"].GetString();
     std::string password = doc["password"].GetString();

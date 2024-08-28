@@ -5,6 +5,7 @@
 #include "DiscardFeedbackQuestion.h"
 #include "Feedback.h"
 #include "FoodItem.h"
+#include "Functionalities/Actions.h"
 #include "MenuItem.h"
 #include <regex>
 #include <unordered_map>
@@ -12,132 +13,120 @@
 using Controller::ChefController;
 
 ChefController::ChefController(
-    const std::string &authEndpoint,
     std::shared_ptr<Service::UserService> userService,
     std::shared_ptr<Service::FoodItemService> foodItemService,
     std::shared_ptr<Service::MenuService> menuService,
     std::shared_ptr<Service::RecommendationService> recommendationService)
     : userService(userService), foodItemService(foodItemService),
-      menuService(menuService), recommendationService(recommendationService),
-      baseAuthEndpoint(authEndpoint) {
-  registerRoutes();
+      menuService(menuService), recommendationService(recommendationService) {
+  registerActions();
 }
 
-void ChefController::registerRoutes() {
-  authRoutes.insert(
-      {"/viewFoodItems",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+void ChefController::registerActions() {
+  actions.insert(
+      {ChefActions::VIEW_FOOD_ITEMS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewFoodItems(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getRecommendedMenu",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::GET_RECOMMENDED_MENU,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->getRecommendedMenu(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/createMenu",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::CREATE_MENU,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->createMenu(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewMenu",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_MENU,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewMenu(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewRolloutMenu",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_ROLLOUT_MENU,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewRolloutMenu(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/updateMenu",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::UPDATE_MENU,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->updateMenu(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewFeedback",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_ROLLOUT_FEEDBACK,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewRolloutFeedback(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/viewNotifications",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_NOTIFICATIONS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewNotifications(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/addDiscardQuestion",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::ADD_DISCARD_FEEDBACK_QUESTION,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->addDiscardFeedbackQuestion(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/discardFoodItem",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::DISCARD_FOOD_ITEM,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->discardFoodItem(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getAnswerSentiments",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_DISCARD_FEEDBACK_ANSWER_SENTIMENTS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewDiscardFeedbackAnswerSentiments(socket, request,
                                                           payload);
        }});
-  authRoutes.insert(
-      {"/viewDiscardQuestion",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::VIEW_DISCARD_FEEDBACK_QUESTIONS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->viewDiscardFeedbackQuestions(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getFoodItemsBelowRating",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::GET_FOOD_ITEMS_BELOW_RATING,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->getFoodItemsBelowRating(socket, request, payload);
        }});
-  authRoutes.insert(
-      {"/getDiscardedFoodItems",
-       [this](std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-              std::vector<unsigned char> &payload) -> bool {
+  actions.insert(
+      {ChefActions::GET_DISCARDED_FOOD_ITEMS,
+       [this](std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+              rapidjson::Document &payload) -> bool {
          return this->getDiscardedFoodItems(socket, request, payload);
        }});
 }
 
-bool ChefController::handleRequest(TcpSocket socket, TCPRequest &request,
-                                   std::vector<unsigned char> &payload) {
-  std::string endpoint = request.protocolHeader.endpoint;
-  std::smatch match;
-  // Matches a string starting with a slash, followed by non-slash characters
-  // (group 1), and optionally the rest starting from another slash (group 2)
-  std::regex pattern(R"(^(/[^/]+)(/.*)?$)");
-  std::shared_ptr<TcpSocket> socketPtr =
+bool ChefController::handleRequest(TcpSocket socket, rapidjson::Document &request,
+                                   rapidjson::Document &payload) {
+  if (request.HasMember("action") && request["action"].IsInt()) {
+    int action = request["action"].GetInt();
+    if (actions.count((ChefActions)action) > 0)
+    {
+      std::shared_ptr<TcpSocket> socketPtr =
       std::make_shared<TcpSocket>(std::move(socket));
-  if (std::regex_match(endpoint, match, pattern)) {
-    std::string controllerKey = match[2].str();
-    if (authRoutes.find(controllerKey) != authRoutes.end()) {
-      if (authRoutes[controllerKey](socketPtr, request, payload)) {
-        return true;
-      }
-      return true;
-    } else {
-      std::cout << "No route found for: " << controllerKey << std::endl;
+      return actions[(ChefActions)action](socketPtr, request, payload);
     }
   }
   return false;
 }
-std::string ChefController::getEndpoint() { return baseAuthEndpoint; }
 
 bool ChefController::viewFoodItems(std::shared_ptr<TcpSocket> socket,
-                                   TCPRequest &request,
-                                   std::vector<unsigned char> &payload) {
+                                   rapidjson::Document &request,
+                                   rapidjson::Document &payload) {
   U64 categoryId;
   try {
     categoryId.deserialize(payload);
@@ -162,8 +151,8 @@ bool ChefController::viewFoodItems(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::getRecommendedMenu(std::shared_ptr<TcpSocket> socket,
-                                        TCPRequest &request,
-                                        std::vector<unsigned char> &payload) {
+                                        rapidjson::Document &request,
+                                        rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   Pair<U64, U32> data;
   try {
@@ -190,8 +179,8 @@ bool ChefController::getRecommendedMenu(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::createMenu(std::shared_ptr<TcpSocket> socket,
-                                TCPRequest &request,
-                                std::vector<unsigned char> &payload) {
+                                rapidjson::Document &request,
+                                rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   Pair<DTO::Menu, Array<DTO::MenuItem>> requestData;
   try {
@@ -215,8 +204,8 @@ bool ChefController::createMenu(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::viewMenu(std::shared_ptr<TcpSocket> socket,
-                              TCPRequest &request,
-                              std::vector<unsigned char> &payload) {
+                              rapidjson::Document &request,
+                              rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   SString date;
   try {
@@ -247,8 +236,8 @@ bool ChefController::viewMenu(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::viewRolloutMenu(std::shared_ptr<TcpSocket> socket,
-                                     TCPRequest &request,
-                                     std::vector<unsigned char> &payload) {
+                                     rapidjson::Document &request,
+                                     rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   SString date;
   try {
@@ -278,8 +267,8 @@ bool ChefController::viewRolloutMenu(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::updateMenu(std::shared_ptr<TcpSocket> socket,
-                                TCPRequest &request,
-                                std::vector<unsigned char> &payload) {
+                                rapidjson::Document &request,
+                                rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   Pair<DTO::Menu, Array<DTO::MenuItem>> requestData;
   try {
@@ -303,8 +292,8 @@ bool ChefController::updateMenu(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::viewRolloutFeedback(std::shared_ptr<TcpSocket> socket,
-                                         TCPRequest &request,
-                                         std::vector<unsigned char> &payload) {
+                                         rapidjson::Document &request,
+                                         rapidjson::Document &payload) {
   Pair<U64, SString> data;
   try {
     data.deserialize(payload);
@@ -370,8 +359,8 @@ bool ChefController::viewRolloutFeedback(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::viewNotifications(std::shared_ptr<TcpSocket> socket,
-                                       TCPRequest &request,
-                                       std::vector<unsigned char> &payload) {
+                                       rapidjson::Document &request,
+                                       rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   U64 userId;
   try {
@@ -395,8 +384,8 @@ bool ChefController::viewNotifications(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::addDiscardFeedbackQuestion(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   Pair<SString, U64> questionFoodItemPair;
   try {
@@ -419,8 +408,8 @@ bool ChefController::addDiscardFeedbackQuestion(
 }
 
 bool ChefController::discardFoodItem(std::shared_ptr<TcpSocket> socket,
-                                     TCPRequest &request,
-                                     std::vector<unsigned char> &payload) {
+                                     rapidjson::Document &request,
+                                     rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   U64 foodItemId;
   try {
@@ -444,8 +433,8 @@ bool ChefController::discardFoodItem(std::shared_ptr<TcpSocket> socket,
 }
 
 bool ChefController::viewDiscardFeedbackAnswerSentiments(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   U64 questionId;
   try {
@@ -483,8 +472,8 @@ bool ChefController::viewDiscardFeedbackAnswerSentiments(
 }
 
 bool ChefController::viewDiscardFeedbackQuestions(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   U64 foodItemId;
   try {
@@ -511,8 +500,8 @@ bool ChefController::viewDiscardFeedbackQuestions(
 }
 
 bool ChefController::getFoodItemsBelowRating(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   Double rating;
   try {
@@ -539,8 +528,8 @@ bool ChefController::getFoodItemsBelowRating(
 }
 
 bool ChefController::getDiscardedFoodItems(
-    std::shared_ptr<TcpSocket> socket, TCPRequest &request,
-    std::vector<unsigned char> &payload) {
+    std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
+    rapidjson::Document &payload) {
   std::vector<unsigned char> response;
   try {
     std::vector<DTO::FoodItem> foodItems =

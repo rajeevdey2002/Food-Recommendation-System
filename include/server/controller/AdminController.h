@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "Sockets/TcpSocket.h"
 
+#include "Functionalities/Actions.h"
 #include "IController.h"
 #include "server/service/FoodItemService.h"
 #include "server/service/UserService.h"
@@ -17,45 +18,42 @@ class AdminController : public IController {
   std::shared_ptr<Service::UserService> userService;
   std::shared_ptr<Service::FoodItemService> foodItemService;
 
-  std::string baseAuthEndpoint;
   std::unordered_map<
-      std::string,
-      std::function<bool(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+      AdminActions,
+      std::function<bool(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                          rapidjson::Document &payload)>>
-      authRoutes;
+      actions;
 
-  bool addFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool addFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                    rapidjson::Document &payload);
-  bool removeFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool removeFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                       rapidjson::Document &payload);
-  bool updateFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool updateFoodItem(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                       rapidjson::Document &payload);
-  bool getFoodItems(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool getFoodItems(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                     rapidjson::Document &payload);
-  bool addUser(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool addUser(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                rapidjson::Document &payload);
-  bool viewNotifications(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool viewNotifications(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                          rapidjson::Document &payload);
   bool addFoodItemAttribute(std::shared_ptr<TcpSocket> socket,
-                            rapidjson::Document request,
+                            rapidjson::Document &request,
                             rapidjson::Document &payload);
-  bool getAllAttributes(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool getAllAttributes(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                         rapidjson::Document &payload);
   bool viewFoodItemAttributes(std::shared_ptr<TcpSocket> socket,
-                              rapidjson::Document request,
+                              rapidjson::Document &request,
                               rapidjson::Document &payload);
-  bool removeAttribute(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool removeAttribute(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                        rapidjson::Document &payload);
-  bool addAttribute(std::shared_ptr<TcpSocket> socket, rapidjson::Document request,
+  bool addAttribute(std::shared_ptr<TcpSocket> socket, rapidjson::Document &request,
                     rapidjson::Document &payload);
 
 public:
-  AdminController(const std::string &authEndpoint,
-                  std::shared_ptr<Service::UserService> userService,
+  AdminController(std::shared_ptr<Service::UserService> userService,
                   std::shared_ptr<Service::FoodItemService> foodItemService);
-  bool handleRequest(TcpSocket socket, rapidjson::Document request,
+  bool handleRequest(TcpSocket socket, rapidjson::Document &request,
                      rapidjson::Document &payload) override;
-  std::string getEndpoint() override;
 };
 
 }; // namespace Controller

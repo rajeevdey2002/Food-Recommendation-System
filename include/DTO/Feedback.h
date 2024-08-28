@@ -23,8 +23,7 @@ struct Feedback {
       : feedbackId(feedbackId), userId(userId), foodItemId(foodItemId),
         preference(preference), date(date) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -37,14 +36,9 @@ struct Feedback {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static Feedback fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static Feedback fromJson(rapidjson::Document &doc) {
     uint64_t feedbackId(doc["feedbackId"].GetUint64());
     uint64_t userId(doc["userId"].GetUint64());
     uint64_t foodItemId(doc["foodItemId"].GetUint64());

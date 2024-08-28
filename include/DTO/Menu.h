@@ -18,8 +18,7 @@ struct Menu {
   Menu(uint64_t menuId, std::string menuName, uint64_t categoryId, bool isSurvey, std::string date)
       : menuId(menuId), menuName(menuName), categoryId(categoryId), isSurvey(isSurvey), date(date) {}
 
-  std::string toJson() const {
-    rapidjson::Document doc;
+  void toJson(rapidjson::Document &doc) const {
     doc.SetObject();
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -32,14 +31,9 @@ struct Menu {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
-
-    return buffer.GetString();
   }
 
-  static Menu fromJson(const std::string& jsonStr) {
-    rapidjson::Document doc;
-    doc.Parse(jsonStr.c_str());
-
+  static Menu fromJson(rapidjson::Document &doc) {
     uint64_t menuId(doc["menuId"].GetUint64());
     std::string menuName(doc["menuName"].GetString());
     uint64_t categoryId(doc["categoryId"].GetUint64());
