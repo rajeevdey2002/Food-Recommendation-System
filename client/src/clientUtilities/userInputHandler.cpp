@@ -1,4 +1,4 @@
-#include "../../include/clientUtilities/userInputHandler.h"
+#include "../../include/clientUtilities/UserInputHandler.h"
 
 int UserInputHandler::getIntInput(const std::string &prompt)
 {

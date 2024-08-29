@@ -1,4 +1,4 @@
-#include "../../include/requestHandler/requestHandler.h"
+#include "../../include/requestHandler/RequestHandler.h"
 #include <cstring>
 #include <stdexcept>
 #include <unistd.h>

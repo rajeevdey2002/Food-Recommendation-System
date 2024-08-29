@@ -1,5 +1,5 @@
-#include "../../include/authentication/authentication.h"
-#include "../../include/clientUtilities/dataParser.h"
+#include "../../include/authentication/Authentication.h"
+#include "../../include/clientUtilities/ClientDataParser.h"
 #include <iostream>
 
 Authentication::Authentication(ServerConnection &serverConn) : serverConn(serverConn) {}

@@ -1,9 +1,9 @@
 #ifndef ADMIN_H
 #define ADMIN_H
 
-#include "../serverConnection/serverConnection.h"
-#include "../clientUtilities/userInputHandler.h"
-#include "../clientUtilities/dataParser.h"
+#include "../serverConnection/ServerConnection.h"
+#include "../clientUtilities/UserInputHandler.h"
+#include "../clientUtilities/ClientDataParser.h"
 #include <memory>
 #include <string>
 

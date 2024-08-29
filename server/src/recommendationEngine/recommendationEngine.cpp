@@ -1,5 +1,5 @@
-#include "../../include/recommendationEngine/recommendationEngine.h"
-#include "../../include/recommendationEngine/sentimentDictionary.h"
+#include "../../include/recommendationEngine/RecommendationEngine.h"
+#include "../../include/recommendationEngine/SentimentDictionary.h"
 #include <string>
 #include <algorithm>
 #include <sstream>

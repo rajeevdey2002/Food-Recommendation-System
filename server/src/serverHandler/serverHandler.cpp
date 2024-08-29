@@ -1,4 +1,4 @@
-#include "../../include/serverHandler/serverHandler.h"
+#include "../../include/serverHandler/ServerHandler.h"
 #include <iostream>
 #include <unistd.h>
 #include <sys/socket.h>

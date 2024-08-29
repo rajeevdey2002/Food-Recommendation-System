@@ -4,7 +4,7 @@
 #include "../database/FeedbackDAO.h"
 #include "IRequestHandler.h"
 #include "../recommendationEngine/IRecommendationEngine.h"
-#include "../serverUtilities/dataParser.h"
+#include "../serverUtilities/ServerDataParser.h"
 #include "../database/MenuDAO.h"
 #include "NotificationDAO.h"
 #include "UserDAO.h"

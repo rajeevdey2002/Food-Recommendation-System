@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include "../inc/IRecommendationEngine.h"
-#include "../inc/recommendationEngine.h"
+#include "../inc/RecommendationEngine.h"
 #include "MockDatabaseController.h"
 
 class RecommendationEngineTest : public ::testing::TestWithParam<std::pair<std::string, float>>

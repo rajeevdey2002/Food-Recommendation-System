@@ -1,12 +1,12 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "../serverConnection/serverConnection.h"
-#include "../clientUtilities/userInputHandler.h"
-#include "../authentication/authentication.h"
-#include "../chef/chef.h"
-#include "../admin/admin.h"
-#include "../employee/employee.h"
+#include "../serverConnection/ServerConnection.h"
+#include "../clientUtilities/UserInputHandler.h"
+#include "../authentication/Authentication.h"
+#include "../chef/ChefHandler.h"
+#include "../admin/AdminHandler.h"
+#include "../employee/EmployeeHandler.h"
 
 class Application
 {

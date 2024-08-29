@@ -5,10 +5,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "../serverConnection/serverConnection.h"
-#include "../clientUtilities/dataParser.h"
-#include "../clientUtilities/menu.h"
-#include "../clientUtilities/userInputHandler.h"
+#include "../serverConnection/ServerConnection.h"
+#include "../clientUtilities/ClientDataParser.h"
+#include "../clientUtilities/Menu.h"
+#include "../clientUtilities/UserInputHandler.h"
 
 class Employee
 {

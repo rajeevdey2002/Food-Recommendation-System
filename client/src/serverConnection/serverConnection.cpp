@@ -1,4 +1,4 @@
-#include "../../include/serverConnection/serverConnection.h"
+#include "../../include/serverConnection/ServerConnection.h"
 
 ServerConnection::ServerConnection(const std::string &serverIp, int serverPort)
     : serverIp(serverIp), serverPort(serverPort), sock(-1) {}

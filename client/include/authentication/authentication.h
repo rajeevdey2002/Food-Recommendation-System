@@ -1,8 +1,8 @@
 #ifndef AUTHENTICATION_H
 #define AUTHENTICATION_H
 
-#include "../serverConnection/serverConnection.h"
-#include "../clientUtilities/userInputHandler.h"
+#include "../serverConnection/ServerConnection.h"
+#include "../clientUtilities/UserInputHandler.h"
 
 class Authentication
 {

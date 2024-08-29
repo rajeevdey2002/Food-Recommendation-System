@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "../serverUtilities/utils.h"
+#include "../serverUtilities/Utils.h"
 #include "../requestHandler/IRequestHandler.h"
 
 class serverHandler
