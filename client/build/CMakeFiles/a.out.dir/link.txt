@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/a.out.dir/Main.cpp.o -o a.out  utils/libutil.a serverConnection/libserverConnection.a authentication/libauth.a chef/libchef.a admin/libadmin.a employee/libemployee.a application/libapplication.a authentication/libauth.a chef/libchef.a admin/libadmin.a employee/libemployee.a utils/libutil.a serverConnection/libserverConnection.a 

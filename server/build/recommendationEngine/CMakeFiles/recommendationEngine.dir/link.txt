@@ -1,0 +1,2 @@
+/usr/bin/ar qc librecommendationEngine.a CMakeFiles/recommendationEngine.dir/src/recommendationEngine.cpp.o
+/usr/bin/ranlib librecommendationEngine.a
