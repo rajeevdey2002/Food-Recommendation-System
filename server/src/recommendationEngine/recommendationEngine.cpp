@@ -7,7 +7,7 @@
 std::vector<RecommendedMenuData> RecommendationEngine::getRecommendedFood()
 {
     std::vector<RecommendedMenuData> recommendedMenus;
-    std::vector<Menu> menus = database->fetchMenusWithFeedback();
+    std::vector<Menu> menus = menuDAO->fetchMenusWithFeedback();
 
     for (auto &menu : menus)
     {
@@ -90,8 +90,8 @@ float RecommendationEngine::calculateSentimentScore(const std::string &feedback)
 
 std::vector<DailyMenuAttributes> RecommendationEngine::getRecommendedFoodForUser(int userId)
 {
-    UserProfile userProfile = database->fetchUserProfile(userId);
-    std::vector<DailyMenuAttributes> dailyMenus = database->getDailyMenuWithAttributes();
+    UserProfile userProfile = userDAO->fetchUserProfile(userId);
+    std::vector<DailyMenuAttributes> dailyMenus = menuDAO->getDailyMenuWithAttributes();
     std::vector<DailyMenuAttributes> sortedMenus = sortMenusByUserProfile(dailyMenus, userProfile);
 
     return sortedMenus;
@@ -147,7 +147,7 @@ std::vector<DailyMenuAttributes> RecommendationEngine::sortMenusByUserProfile(co
 std::vector<Menu> RecommendationEngine::getDiscardedFood()
 {
     std::vector<Menu> discardedMenus;
-    std::vector<Menu> menus = database->fetchMenusWithFeedback();
+    std::vector<Menu> menus = menuDAO->fetchMenusWithFeedback();
 
     for (auto &menu : menus)
     {

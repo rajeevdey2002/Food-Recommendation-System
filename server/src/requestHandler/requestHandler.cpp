@@ -6,8 +6,14 @@
 
 #define BUFFER_SIZE (1024)
 
-RequestHandler::RequestHandler(std::shared_ptr<IDatabaseController> database, std::shared_ptr<IRecommendationEngine> recommendationEngine)
-    : database(database), recommendationEngine(recommendationEngine), dataParser(std::make_shared<DataParser>()) {}
+RequestHandler::RequestHandler(
+    std::shared_ptr<UserDAO> userDAO, std::shared_ptr<MenuDAO> menuDAO,
+    std::shared_ptr<NotificationDAO> notificationDAO,
+    std::shared_ptr<FeedbackDAO> feedbackDAO,
+    std::shared_ptr<IRecommendationEngine> recommendationEngine)
+    : userDAO(userDAO), menuDAO(menuDAO), notificationDAO(notificationDAO),
+      feedbackDAO(feedbackDAO), recommendationEngine(recommendationEngine),
+      dataParser(std::make_shared<DataParser>()) {}
 
 void RequestHandler::handleRequest(int new_socket)
 {
@@ -139,7 +145,7 @@ std::string RequestHandler::handleLoginRequest(const std::string &data)
 
     if (loginParam.first)
     {
-        return database->authenticateUser(loginParam.second.userId, loginParam.second.password);
+        return userDAO->authenticateUser(loginParam.second.userId, loginParam.second.password);
     }
     else
     {
@@ -174,7 +180,7 @@ std::string RequestHandler::handleAddUserRequest(const std::string &data)
 
     if (addUserParam.first)
     {
-        if (database->addUser(addUserParam.second))
+        if (userDAO->addUser(addUserParam.second))
         {
             return "STATUS_OK,User added successfully";
         }
@@ -205,7 +211,7 @@ std::string RequestHandler::handleDelUserRequest(const std::string &data)
                 return "STATUS_ERROR,You cannot delete your own account";
             }
 
-            if (database->deleteUser(userIdToDelete))
+            if (userDAO->deleteUser(userIdToDelete))
             {
                 return "STATUS_OK,User deleted successfully";
             }
@@ -243,7 +249,7 @@ std::string RequestHandler::handleAddMenuRequest(const std::string &data)
 
     if (addMenuParam.first)
     {
-        if (database->addMenu(menuData))
+        if (menuDAO->addMenu(menuData))
         {
             return "STATUS_OK,Menu added successfully";
         }
@@ -261,7 +267,7 @@ std::string RequestHandler::handleAddMenuRequest(const std::string &data)
 std::string RequestHandler::handleDelMenuRequest(const std::string &data)
 {
     int menuId = std::stoi(data);
-    if (database->deleteMenu(menuId))
+    if (menuDAO->deleteMenu(menuId))
     {
         return "STATUS_OK,Menu deleted successfully";
     }
@@ -280,7 +286,7 @@ std::string RequestHandler::handleAddDailyMenuItemRequest(const std::string &dat
 
     if (addDailyMenuItemParam.first)
     {
-        if (database->insertDailyMenuEntries({dailyMenuEntry}))
+        if (menuDAO->insertDailyMenuEntries({dailyMenuEntry}))
         {
             handleNotification("Menu is rolled out");
             return "STATUS_OK,Daily menu item added successfully";
@@ -319,7 +325,7 @@ std::string RequestHandler::handlePlaceOrderRequest(const std::string &data)
 
     if (placeOrderParam.first)
     {
-        if (database->insertUserOrderEntries({userOrderEntry}))
+        if (userDAO->insertUserOrderEntries({userOrderEntry}))
         {
             return "STATUS_OK,User order placed successfully";
         }
@@ -340,7 +346,7 @@ std::string RequestHandler::handleAddUserFeedbackRequest(const std::string &data
 
     if (addFeedbackParam.first)
     {
-        if (database->insertUserFeedback(addFeedbackParam.second))
+        if (feedbackDAO->insertUserFeedback(addFeedbackParam.second))
         {
             return "STATUS_OK,User feedback added successfully";
         }
@@ -357,7 +363,7 @@ std::string RequestHandler::handleAddUserFeedbackRequest(const std::string &data
 
 std::string RequestHandler::handleNotification(const std::string &data)
 {
-    if (database->addNotification(data))
+    if (notificationDAO->addNotification(data))
     {
         return "STATUS_OK,Notification sent successfully";
     }
@@ -366,7 +372,7 @@ std::string RequestHandler::handleNotification(const std::string &data)
 std::string RequestHandler::handleGetNotifications(const std::string &data)
 {
     int userId = std::stoi(data);
-    std::vector<Notification> notifications = database->getNonViewedNotificationsForUser(userId);
+    std::vector<Notification> notifications = userDAO->getNonViewedNotificationsForUser(userId);
 
     if (notifications.empty())
     {
@@ -380,7 +386,7 @@ std::string RequestHandler::handleMarkNotificationsViewed(const std::string &dat
 {
     auto [userId, notificationIds] = dataParser->deserializeMarkNotificationsViewedRequest(data);
 
-    if (database->markNotificationsAsViewed(userId, notificationIds))
+    if (notificationDAO->markNotificationsAsViewed(userId, notificationIds))
     {
         return "STATUS_OK,Notifications marked as viewed";
     }
@@ -403,7 +409,7 @@ std::string RequestHandler::handleUpdateProfile(const std::string &data)
         profile.cuisinePreference = updateProfileParam.second[3];
         profile.sweetTooth = updateProfileParam.second[4];
 
-        if (database->updateUserProfile(profile))
+        if (userDAO->updateUserProfile(profile))
         {
             return "STATUS_OK,Profile updated successfully";
         }
@@ -422,7 +428,7 @@ std::string RequestHandler::handleViewProfile(const std::string &data)
 {
     int userId = std::stoi(data);
 
-    UserProfile userProfile = database->getUserProfile(userId);
+    UserProfile userProfile = userDAO->getUserProfile(userId);
 
     std::string response = "STATUS_OK," +
                            std::to_string(userProfile.userId) + "," +
@@ -442,7 +448,7 @@ std::string RequestHandler::handleSetDailyMenuAvailabilityToZeroRequest(const st
     {
         int dailyMenuId = std::stoi(setAvailabilityParam.second.at(0));
 
-        if (database->setDailyMenuAvailabilityToZero(dailyMenuId))
+        if (menuDAO->setDailyMenuAvailabilityToZero(dailyMenuId))
         {
             return "STATUS_OK,Daily menu availability set to zero";
         }
@@ -467,7 +473,7 @@ std::string RequestHandler::handleFetchFeedback(const std::string &data)
         Menu menu;
         menu.menuId = menuId;
 
-        database->fetchFeedbacks(menu);
+        menuDAO->fetchFeedbacks(menu);
 
         for (auto &feedback : menu.feedbacks)
         {
@@ -486,7 +492,7 @@ std::string RequestHandler::handleFetchFeedback(const std::string &data)
 
 std::string RequestHandler::handleAddFeedbackQuestion(const std::string &data)
 {
-    if (database->addFeedbackQuestion(data))
+    if (feedbackDAO->addFeedbackQuestion(data))
     {
         return "STATUS_OK,Feedback question added successfully";
     }
@@ -498,7 +504,7 @@ std::string RequestHandler::handleAddFeedbackQuestion(const std::string &data)
 
 std::string RequestHandler::handleFetchFeedbackQuestions()
 {
-    auto questions = database->fetchFeedbackQuestions();
+    auto questions = feedbackDAO->fetchFeedbackQuestions();
 
     std::string response = "STATUS_OK";
     for (const auto &question : questions)
@@ -515,7 +521,7 @@ std::string RequestHandler::handleUpdateFeedbackAnswer(const std::string &data)
 
     if (feedbackAnswerParams.first)
     {
-        if (database->storeFeedbackAnswers(feedbackAnswerParams.second))
+        if (feedbackDAO->storeFeedbackAnswers(feedbackAnswerParams.second))
         {
             return "STATUS_OK,Feedback answers updated successfully";
         }
@@ -534,8 +540,8 @@ std::string RequestHandler::handlefetchSuggestionForMenu(const std::string &data
 {
     int menuId = std::stoi(data);
 
-    auto questions = database->fetchFeedbackQuestions();
-    std::vector<FeedbackAnswer> answers = database->fetchSuggestionsForMenu(menuId);
+    auto questions = feedbackDAO->fetchFeedbackQuestions();
+    std::vector<FeedbackAnswer> answers = menuDAO->fetchSuggestionsForMenu(menuId);
 
     std::string response;
     response += "Questions and Answers:\n";

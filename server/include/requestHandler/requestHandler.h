@@ -1,20 +1,30 @@
 #ifndef REQUESTHANDLER_H
 #define REQUESTHANDLER_H
 
+#include "../database/FeedbackDAO.h"
 #include "IRequestHandler.h"
-#include "../database/IDatabaseController.h"
 #include "../recommendationEngine/IRecommendationEngine.h"
 #include "../serverUtilities/dataParser.h"
+#include "../database/MenuDAO.h"
+#include "NotificationDAO.h"
+#include "UserDAO.h"
 #include <memory>
 
 class RequestHandler : public IRequestHandler
 {
 public:
-    RequestHandler(std::shared_ptr<IDatabaseController> database, std::shared_ptr<IRecommendationEngine> recommendationEngine);
-    void handleRequest(int new_socket) override;
+  RequestHandler(std::shared_ptr<UserDAO> userDAO,
+                 std::shared_ptr<MenuDAO> menuDAO,
+                 std::shared_ptr<NotificationDAO> notificationDAO,
+                 std::shared_ptr<FeedbackDAO> feedbackDAO,
+                 std::shared_ptr<IRecommendationEngine> recommendationEngine);
+  void handleRequest(int new_socket) override;
 
 private:
-    std::shared_ptr<IDatabaseController> database;
+    std::shared_ptr<UserDAO> userDAO;
+    std::shared_ptr<MenuDAO> menuDAO;
+    std::shared_ptr<NotificationDAO> notificationDAO;
+    std::shared_ptr<FeedbackDAO> feedbackDAO;
     std::shared_ptr<IRecommendationEngine> recommendationEngine;
     std::shared_ptr<DataParser> dataParser;
 
