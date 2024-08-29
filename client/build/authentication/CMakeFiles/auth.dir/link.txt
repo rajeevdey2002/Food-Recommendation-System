@@ -1,2 +1,0 @@
-/usr/bin/ar qc libauth.a CMakeFiles/auth.dir/src/authentication.cpp.o
-/usr/bin/ranlib libauth.a

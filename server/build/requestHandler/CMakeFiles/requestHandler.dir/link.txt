@@ -1,2 +1,0 @@
-/usr/bin/ar qc librequestHandler.a CMakeFiles/requestHandler.dir/src/requestHandler.cpp.o
-/usr/bin/ranlib librequestHandler.a

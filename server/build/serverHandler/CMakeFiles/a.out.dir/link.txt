@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/a.out.dir/src/main.cpp.o CMakeFiles/a.out.dir/src/serverHandler.cpp.o -o a.out  ../database/libdatabase.a ../recommendationEngine/librecommendationEngine.a ../requestHandler/librequestHandler.a -lmysqlcppconn ../database/libdatabase.a ../recommendationEngine/librecommendationEngine.a ../utils/libutils.a 

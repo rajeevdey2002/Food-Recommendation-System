@@ -1,3 +1,0 @@
-add_library(serverConnection src/serverConnection.cpp)
-
-target_include_directories(serverConnection PUBLIC inc)

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libchef.a CMakeFiles/chef.dir/src/chef.cpp.o
-/usr/bin/ranlib libchef.a
