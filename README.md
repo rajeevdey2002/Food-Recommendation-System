@@ -17,3 +17,10 @@ Run:- ./cafeteria_server
 
 Navigate to client folder
 Run:- ./cafeteria_client
+
+To run tests:- 
+
+Navigate to serverTest or clientTest
+cmake
+
+For executing tests:- ctest

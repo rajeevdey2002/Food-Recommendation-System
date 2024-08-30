@@ -18,13 +18,13 @@ void Admin::mainMenu()
     int choice;
     do
     {
-        std::cout << "\n-------Main Menu---------\n";
+        std::cout << "\n------- Admin's Main Menu---------\n";
         std::cout << "\n1. Add User\n";
         std::cout << "2. Delete User\n";
         std::cout << "3. Add Menu Item\n";
         std::cout << "4. Delete Menu Item\n";
-        std::cout << "5. view recommended Food\n";
-        std::cout << "6. view rolledout Menu\n";
+        std::cout << "5. View recommended Food\n";
+        std::cout << "6. View rolledout Menu\n";
         std::cout << "7. Logout\n\n";
         choice = userInputHandler->getIntInput("Enter your choice: ");
 
@@ -43,7 +43,7 @@ void Admin::mainMenu()
             deleteMenu();
             break;
         case 5:
-            viewRecommendedmenu();
+            viewRecommendedMenu();
             break;
         case 6:
             viewMenu();
@@ -62,7 +62,7 @@ void Admin::addUser()
     int userId = userInputHandler->getIntInput("Enter user ID: ");
     std::string username = userInputHandler->getStringInput("Enter username: ");
     std::string password = userInputHandler->getStringInput("Enter password: ");
-    std::string role = userInputHandler->getStringInput("Select role: ");
+    std::string role = userInputHandler->getStringInput("Select role (Chef/Employee): ");
 
     std::string request = std::to_string((int)RequestType::ADD_USER) + "," + std::to_string(userId) + "," + username + "," + password + "," + role;
 
@@ -95,7 +95,7 @@ void Admin::deleteUser()
 
 void Admin::addMenu()
 {
-    viewRecommendedmenu();
+    viewRecommendedMenu();
     std::string menuName = userInputHandler->getStringInput("Enter menu name: ");
     float menuPrice = userInputHandler->getIntInput("Enter cost: ");
 
@@ -128,7 +128,7 @@ void Admin::addMenu()
 
 void Admin::deleteMenu()
 {
-    viewRecommendedmenu();
+    viewRecommendedMenu();
     int menuid = userInputHandler->getIntInput("Enter menu ID to delete: ");
     std::string request = std::to_string((int)RequestType::DELETE_MENU) + "," + std::to_string(menuid);
 
@@ -142,7 +142,7 @@ void Admin::deleteMenu()
     std::cout << "server response: " << response << std::endl;
 }
 
-void Admin::viewRecommendedmenu()
+void Admin::viewRecommendedMenu()
 {
     std::string request = std::to_string((int)RequestType::GET_RECOMMENDED_FOOD);
     if (!serverConnection.sendRequest(request))

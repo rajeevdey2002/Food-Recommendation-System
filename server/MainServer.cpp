@@ -1,7 +1,7 @@
-#include "../../include/recommendationEngine/RecommendationEngine.h"
-#include "../../include/requestHandler/RequestHandler.h"
-#include "../../include/serverHandler/ServerHandler.h"
-#include "../../include/database/DatabaseConnection.h"
+#include "include/recommendationEngine/RecommendationEngine.h"
+#include "include/requestHandler/RequestHandler.h"
+#include "include/serverHandler/ServerHandler.h"
+#include "include/database/DatabaseConnection.h"
 #include "FeedbackDAO.h"
 #include "NotificationDAO.h"
 #include <memory>

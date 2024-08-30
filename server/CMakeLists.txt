@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project("cafeteria_server" CXX)
 
@@ -47,7 +47,7 @@ endforeach()
 include_directories(${DIR_LIST})
 
 # build cafeteria_server as a dynamic library
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${INCLUDE_FILES} ${LIBS_INCLUDE_FILES})
+add_executable(${PROJECT_NAME} MainServer.cpp ${SRC_FILES} ${INCLUDE_FILES} ${LIBS_INCLUDE_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${DIR_LIST}

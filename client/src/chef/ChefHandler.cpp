@@ -15,7 +15,7 @@ void Chef::mainMenu()
     int choice;
     do
     {
-        std::cout << "\n---------Main Menu---------\n";
+        std::cout << "\n--------- Chef's Main Menu---------\n";
         std::cout << "\n1. Fetch Recommended Food\n";
         std::cout << "2. Rollout Menu\n";
         std::cout << "3. View Current Menu\n";
@@ -129,7 +129,6 @@ void Chef::rolloutMenu()
     }
 
     std::string response = serverConnection.readResponse();
-
     std::cout << response << std::endl;
 }
 
@@ -228,7 +227,6 @@ void Chef::setMenuAvailabilityToZero()
     }
 
     std::string response = serverConnection.readResponse();
-
     std::cout << response << std::endl;
 }
 
@@ -324,7 +322,6 @@ void Chef::deleteMenuItem()
         return;
     }
     std::string response = serverConnection.readResponse();
-
     std::cout << "server response: " << response << std::endl;
 }
 
@@ -340,7 +337,6 @@ void Chef::writeSuggestionQuestion()
         return;
     }
     std::string response = serverConnection.readResponse();
-
     std::cout << "server response: " << response << std::endl;
 }
 
@@ -376,7 +372,6 @@ void Chef::FoodSuggestionsForMenu()
     }
 
     std::string response = serverConnection.readResponse();
-
     std::cout << std::endl
               << response << std::endl;
 }

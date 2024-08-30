@@ -19,7 +19,7 @@ public:
     void rolloutMenu();
     std::vector<DailyMenuEntry> viewMenu();
     void printRecommendedFood(const std::vector<RecommendedMenuData> &recommendedFood);
-    std::vector<RecommendedMenuData>  fetchRecommendedFood();
+    std::vector<RecommendedMenuData> fetchRecommendedFood();
     void printDailyMenu(const std::vector<DailyMenuEntry> &dailyMenu);
     void setMenuAvailabilityToZero();
     void fetchMenuFeedbacks();
@@ -30,13 +30,12 @@ public:
     void viewDiscardMenu();
 
 private:
-    ServerConnection &serverConnection;
-    std::shared_ptr<DataParser> dataParser;
-    std::shared_ptr<UserInputHandler> userInputHandler;
-
     int id;
     std::string password;
     std::string role;
+    ServerConnection &serverConnection;
+    std::shared_ptr<DataParser> dataParser;
+    std::shared_ptr<UserInputHandler> userInputHandler;
 };
 
 #endif

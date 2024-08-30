@@ -11,22 +11,21 @@ class Admin
 {
 public:
     Admin(int id, const std::string &password, ServerConnection &serverConnection);
-
     void mainMenu();
 
 private:
-    ServerConnection &serverConnection;
-    std::shared_ptr<UserInputHandler> userInputHandler;
-    std::shared_ptr<DataParser> dataParser;
     int id;
     std::string password;
     std::string role;
+    ServerConnection &serverConnection;
+    std::shared_ptr<UserInputHandler> userInputHandler;
+    std::shared_ptr<DataParser> dataParser;
 
     void addUser();
     void deleteUser();
     void addMenu();
     void deleteMenu();
-    void viewRecommendedmenu();
+    void viewRecommendedMenu();
     std::pair<std::string, std::vector<DailyMenuEntry>> fetchDailyMenu();
     std::vector<DailyMenuEntry> viewMenu();
     void printDailyMenu(const std::vector<DailyMenuEntry> &dailyMenu);
