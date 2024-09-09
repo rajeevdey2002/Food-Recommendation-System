@@ -1,0 +1,34 @@
+#ifndef ADMIN_H
+#define ADMIN_H
+
+#include "../serverConnection/ServerConnection.h"
+#include "../clientUtilities/UserInputHandler.h"
+#include "../clientUtilities/ClientDataParser.h"
+#include <memory>
+#include <string>
+
+class Admin
+{
+public:
+    Admin(int id, const std::string &password, ServerConnection &serverConnection);
+    void mainMenu();
+
+private:
+    int id;
+    std::string password;
+    std::string role;
+    ServerConnection &serverConnection;
+    std::shared_ptr<UserInputHandler> userInputHandler;
+    std::shared_ptr<DataParser> dataParser;
+
+    void addUser();
+    void deleteUser();
+    void addMenu();
+    void deleteMenu();
+    void viewRecommendedMenu();
+    std::pair<std::string, std::vector<DailyMenuEntry>> fetchDailyMenu();
+    std::vector<DailyMenuEntry> viewMenu();
+    void printDailyMenu(const std::vector<DailyMenuEntry> &dailyMenu);
+};
+
+#endif
